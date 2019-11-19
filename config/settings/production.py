@@ -162,7 +162,9 @@ COMPRESS_OFFLINE = env.bool("COMPRESS_OFFLINE", default=True)
 # https://github.com/antonagestam/collectfast#installation
 INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 AWS_PRELOAD_METADATA = True
-
+COLLECTFAST_STRATEGY = env(
+    "DJANGO_COLLECTFAST_STRATEGY", default="django.core.files.storage.FileSystemStorage"
+)
 
 # LOGGING
 # ------------------------------------------------------------------------------
