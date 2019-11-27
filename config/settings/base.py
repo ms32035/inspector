@@ -74,7 +74,6 @@ THIRD_PARTY_APPS = [
     "bootstrap_pagination",
     "django_filters",
     "health_check",
-    "djangocodemirror",
 ]
 LOCAL_APPS = [
     "inspector.base.apps.BaseConfig",
