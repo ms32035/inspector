@@ -163,10 +163,11 @@ class EnvironmentStatusListView(PermissionRequiredMixin, BaseFilterView, ListVie
     permission_required = "checks.view_environmentstatus"
     model = EnvironmentStatus
     filterset_class = EnvironmentStatusFilter
-    ordering = ["environment", "check_code"]
 
     def get_queryset(self):
-        qs = EnvironmentStatus.objects.select_related()
+        qs = EnvironmentStatus.objects.select_related().order_by(
+            "environment", "datacheck"
+        )
         qs_filtered_list = EnvironmentStatusFilter(self.request.GET, queryset=qs)
 
         return qs_filtered_list.qs
