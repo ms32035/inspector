@@ -3,10 +3,24 @@ from crispy_forms.bootstrap import TabHolder, Tab, PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from django import forms
-from djangocodemirror.widgets import CodeMirrorWidget
+
+from codemirror import CodeMirrorTextarea
 
 from .models import CheckGroup, Datacheck, CheckRun, EnvironmentStatus
 from ..base.constants import SUBMIT_CSS_CLASSES
+
+
+codemirror_widget = CodeMirrorTextarea(
+    mode="sql",
+    config={
+        "matchBrackets": True,
+        "lineNumbers": False,
+        "extraKeys": {"Ctrl-Space": "autocomplete"},
+        "gutters": ["CodeMirror-lines"],
+    },
+    addon_js=["edit/matchbrackets", "hint/show-hint", "hint/sql-hint"],
+    addon_css=["hint/show-hint"],
+)
 
 
 class DatacheckRunForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
@@ -121,9 +135,9 @@ class DatacheckForm(forms.ModelForm):
         ]
         widgets = {
             "description": forms.Textarea({"cols": 40, "rows": 3}),
-            "left_logic": CodeMirrorWidget(config_name="inspector"),
-            "right_logic": CodeMirrorWidget(config_name="inspector"),
-            "warning_logic": CodeMirrorWidget(config_name="inspector"),
+            "left_logic": codemirror_widget,
+            "right_logic": codemirror_widget,
+            "warning_logic": codemirror_widget,
         }
         system_icon = '<i class="fas fa-desktop" title="System"></i>'
         logic_icon = '<i class="fas fa-code" title="Logic"></i>'
