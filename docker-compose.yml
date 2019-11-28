@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: compose/master/inspector/Dockerfile
-    image: yoyowallet/inspector:master
+    image: ${DOCKER_REPO}:master
     env_file:
       - .envs/.inspector/.django
       - .envs/.inspector/.postgres
@@ -16,19 +16,19 @@ services:
 
   celeryworker:
     <<: *inspector
-    image: yoyowallet/inspector:master
+    image: ${DOCKER_REPO}:master
     ports: []
     command: /start-celeryworker
 
   celerybeat:
     <<: *inspector
-    image: yoyowallet/inspector:master
+    image: ${DOCKER_REPO}:master
     ports: []
     command: /start-celerybeat
 
   flower:
     <<: *inspector
-    image: yoyowallet/inspector:master
+    image: ${DOCKER_REPO}:master
     ports:
       - "5555:5555"
     command: /start-flower

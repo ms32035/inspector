@@ -21,6 +21,23 @@ Documentation
 
 https://yoyo-inspector.readthedocs.io/
 
+Using docker images
+-------------------
+
+Set the image name, for example:
+```
+export DOCKER_REPO=ms32035/inspector
+```
+
+Local development, only Postgres and redis in Docker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+```
+source .envs/.local/.env
+docker-compose -f docker-compose-db.yml up -d
+./manage.py runserver
+```
+
 
 User interface
 --------------
