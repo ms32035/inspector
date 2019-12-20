@@ -25,6 +25,7 @@ class CheckListView(PermissionRequiredMixin, ListView):
     model = Datacheck
     slug_field = "code"
     slug_url_kwarg = "code"
+    ordering = ["code"]
 
 
 check_list_view = CheckListView.as_view()
