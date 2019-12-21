@@ -1,5 +1,6 @@
 from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.messages import success
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
@@ -9,15 +10,15 @@ from django.views.generic import (
     DeleteView,
     UpdateView,
     FormView,
+    RedirectView,
 )
 from django_filters.views import BaseFilterView
 
 from inspector.taskapp.tasks import execute_check
-from .constants import STATUSES
 from .filters import CheckRunFilter, EnvironmentStatusFilter
 from .forms import DatacheckRunForm, DatacheckForm, CheckRunTagForm
 from .models import Datacheck, CheckRun, EnvironmentStatus
-from .service import CheckRunService
+from .service import CheckRunService, EnvironmentStatusService
 
 
 class CheckListView(PermissionRequiredMixin, ListView):
@@ -55,7 +56,6 @@ class DatacheckRunView(
     def form_valid(self, form):
         form.instance.datacheck_id = self.kwargs["pk"]
         form.instance.user = self.request.user
-        form.instance.status = STATUSES.NEW
         # TODO - check if system is available in environment
 
         return super().form_valid(form)
@@ -67,6 +67,17 @@ class DatacheckRunView(
 
 
 datacheck_run_view = DatacheckRunView.as_view()
+
+
+class CheckRunRerunView(PermissionRequiredMixin, PassRequestMixin, RedirectView):
+    permission_required = "checks.add_checkrun"
+    success_message = "Success: Check was retriggered."
+    success_url = reverse_lazy("checks_checkrun_list")
+
+    def get_redirect_url(self, *args, **kwargs):
+        CheckRunService.checkrun_rerun(kwargs["pk"], self.request.user)
+        success(self.request, self.success_message)
+        return self.success_url
 
 
 class CheckRunTagView(
@@ -158,3 +169,16 @@ class DatacheckInfoView(PermissionRequiredMixin, DetailView):
     permission_required = "checks.view_datacheck"
     model = Datacheck
     template_name = "checks/datacheck_info.html"
+
+
+class EnvironmentStatusRerunView(
+    PermissionRequiredMixin, PassRequestMixin, RedirectView
+):
+    permission_required = "checks.add_checkrun"
+    success_message = "Success: Check was retriggered."
+    success_url = reverse_lazy("checks_checkrun_list")
+
+    def get_redirect_url(self, *args, **kwargs):
+        EnvironmentStatusService.env_status_rerun(kwargs["pk"], self.request.user)
+        success(self.request, self.success_message)
+        return self.success_url

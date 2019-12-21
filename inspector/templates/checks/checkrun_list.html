@@ -58,7 +58,10 @@
           {{ object.user.username }}
         </p>
         </td>
-        <td>{% button_hoverdetail 'checks/checkrun_hoverdetail' object %}</td>
+        <td>
+          {% button_hoverdetail 'checks/checkrun_hoverdetail' object %}
+          {% button_rerun object %}
+        </td>
       </tr>
     {% endfor %}
     </tbody>

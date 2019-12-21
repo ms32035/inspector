@@ -52,3 +52,8 @@ def button_run(instance):
         "run_class": f"{instance.__class__.__name__.lower()}-run",
         "name": instance.get_name(),
     }
+
+
+@register.inclusion_tag("components/button_rerun.html")
+def button_rerun(instance):
+    return {"url": instance.get_url("rerun")}

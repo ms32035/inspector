@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 
 from inspector.taskapp.tasks import execute_check
-from .models import Datacheck, Environment, CheckRun
+from .models import Datacheck, Environment, CheckRun, EnvironmentStatus
 
 
 class CheckRunService:
@@ -11,19 +11,17 @@ class CheckRunService:
         datacheck = Datacheck.objects.get(code=check_code)
         environment = Environment.objects.get(name=environment)
 
-        return CheckRunService._create_and_execute_checkrun(
-            datacheck, environment, user
-        )
+        return CheckRunService.create_and_execute_checkrun(datacheck, environment, user)
 
     @staticmethod
     def run_check_tag(tag: str, environment: str, user: User):
         environment = Environment.objects.get(name=environment)
 
         for chk in Datacheck.objects.filter(tags__name__in=tag):
-            CheckRunService._create_and_execute_checkrun(chk, environment, user)
+            CheckRunService.create_and_execute_checkrun(chk, environment, user)
 
     @staticmethod
-    def _create_and_execute_checkrun(
+    def create_and_execute_checkrun(
         check: Datacheck, environment: Environment, user: User
     ) -> int:
         check_run = CheckRun(datacheck=check, environment=environment, user=user)
@@ -32,3 +30,20 @@ class CheckRunService:
             transaction.on_commit(lambda: execute_check.delay(check_run.id))
 
         return check_run.id
+
+    @staticmethod
+    def checkrun_rerun(ckeckrun_id: int, user: User):
+        checkrun: CheckRun = CheckRun.objects.get(id=ckeckrun_id)
+        CheckRunService.create_and_execute_checkrun(
+            check=checkrun.datacheck, environment=checkrun.environment, user=user
+        )
+
+
+class EnvironmentStatusService:
+    @staticmethod
+    def env_status_rerun(status_id: int, user: User):
+        env_status: EnvironmentStatus = EnvironmentStatus.objects.get(id=status_id)
+
+        CheckRunService.create_and_execute_checkrun(
+            check=env_status.datacheck, environment=env_status.environment, user=user
+        )

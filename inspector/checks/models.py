@@ -80,3 +80,6 @@ class EnvironmentStatus(models.Model):
     status = models.CharField(max_length=20, choices=STATUSES)
     result = models.CharField(max_length=20, choices=RESULTS, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
+
+    def get_url(self, action):
+        return reverse(f"checks_environmentstatus_{action}", args=(self.pk,))

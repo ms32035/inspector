@@ -38,6 +38,11 @@ urlpatterns += (
         name="checks_checkrun_detail",
     ),
     path(
+        "checks/checkrun/rerun/<int:pk>/",
+        views.CheckRunRerunView.as_view(),
+        name="checks_checkrun_rerun",
+    ),
+    path(
         "checks/checkrun/runtag/",
         views.CheckRunTagView.as_view(),
         name="check_checkrun_runtag",
@@ -82,5 +87,10 @@ urlpatterns += (
         "checks/environmentstatus/",
         views.EnvironmentStatusListView.as_view(),
         name="checks_environmentstatus_list",
+    ),
+    path(
+        "checks/environmentstatus/rerun/<int:pk>/",
+        views.EnvironmentStatusRerunView.as_view(),
+        name="checks_environmentstatus_rerun",
     ),
 )

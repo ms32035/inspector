@@ -18,7 +18,7 @@ services:
     command: /start
 
   postgres:
-    image: postgres:11
+    image: postgres:12
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
