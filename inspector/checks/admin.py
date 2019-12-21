@@ -3,11 +3,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.formats.base_formats import JSON
 
-from .models import Datacheck, CheckGroup
-
-
-class CheckGroupAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+from .models import Datacheck
 
 
 class DatacheckResource(resources.ModelResource):
@@ -30,4 +26,3 @@ class DatacheckAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(Datacheck, DatacheckAdmin)
-admin.site.register(CheckGroup, CheckGroupAdmin)

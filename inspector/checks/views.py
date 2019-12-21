@@ -15,8 +15,8 @@ from django_filters.views import BaseFilterView
 from inspector.taskapp.tasks import execute_check
 from .constants import STATUSES
 from .filters import CheckRunFilter, EnvironmentStatusFilter
-from .forms import DatacheckRunForm, CheckGroupForm, DatacheckForm, CheckGroupRunForm
-from .models import Datacheck, CheckGroup, CheckRun, EnvironmentStatus
+from .forms import DatacheckRunForm, DatacheckForm, CheckRunTagForm
+from .models import Datacheck, CheckRun, EnvironmentStatus
 from .service import CheckRunService
 
 
@@ -26,6 +26,9 @@ class CheckListView(PermissionRequiredMixin, ListView):
     slug_field = "code"
     slug_url_kwarg = "code"
     ordering = ["code"]
+
+    def get_queryset(self):
+        return Datacheck.objects.prefetch_related("tags").select_related("left_system")
 
 
 check_list_view = CheckListView.as_view()
@@ -66,19 +69,19 @@ class DatacheckRunView(
 datacheck_run_view = DatacheckRunView.as_view()
 
 
-class CheckGroupRunView(
+class CheckRunTagView(
     PermissionRequiredMixin, PassRequestMixin, SuccessMessageMixin, FormView
 ):
     permission_required = "checks.add_checkrun"
     template_name = "components/modals_run.html"
-    form_class = CheckGroupRunForm
-    success_message = "Success: Check group was triggered."
-    success_url = reverse_lazy("checks_checkgroup_list")
+    form_class = CheckRunTagForm
+    success_message = "Success: Checks were triggered."
+    success_url = reverse_lazy("checks_checkrun_list")
 
     def form_valid(self, form):
         if not self.request.is_ajax():
-            CheckRunService.run_check_group(
-                self.kwargs["pk"], form.instance.environment, self.request.user
+            CheckRunService.run_check_tag(
+                form.cleaned_data["tag"], form.instance.environment, self.request.user
             )
 
         return super().form_valid(form)
@@ -93,29 +96,6 @@ class DatacheckDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteVie
 
 
 check_delete_view = DatacheckDeleteView.as_view()
-
-
-class CheckGroupListView(PermissionRequiredMixin, ListView):
-    permission_required = "checks.view_checkgroup"
-    model = CheckGroup
-
-
-class CheckGroupCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = "checks.add_checkgroup"
-    model = CheckGroup
-    form_class = CheckGroupForm
-
-    def get_success_url(self):
-        return reverse("checks_checkgroup_list")
-
-
-class CheckGroupUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = "checks.change_checkgroup"
-    model = CheckGroup
-    form_class = CheckGroupForm
-
-    def get_success_url(self):
-        return reverse("checks_checkgroup_list")
 
 
 class CheckRunListView(PermissionRequiredMixin, BaseFilterView, ListView):
@@ -172,14 +152,6 @@ class EnvironmentStatusListView(PermissionRequiredMixin, BaseFilterView, ListVie
         qs_filtered_list = EnvironmentStatusFilter(self.request.GET, queryset=qs)
 
         return qs_filtered_list.qs
-
-
-class CheckGroupDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
-    permission_required = "checks.delete_checkgroup"
-    model = CheckGroup
-    template_name = "components/modals_delete.html"
-    success_message = "Success: Check group was deleted."
-    success_url = reverse_lazy("checks_checkgroup_list")
 
 
 class DatacheckInfoView(PermissionRequiredMixin, DetailView):

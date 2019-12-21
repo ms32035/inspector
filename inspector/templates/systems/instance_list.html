@@ -11,7 +11,9 @@
       <th><p class="text-center"><i class="fas fa-network-wired" title="Host"></i></p></th>
       <th>
         {% if perms.systems.add_instance %}
+          <p class="text-right">
           {% button_new 'systems_instance_create' %}
+          </p>
         {% endif %}
       </th>
     </tr>

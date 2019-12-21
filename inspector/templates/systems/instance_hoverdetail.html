@@ -1,11 +1,11 @@
 <table class="table table-borderless table-striped">
   <tr>
     <td><p class="font-weight-bold">Database / schema</p></td>
-    <td>{{ object.database_or_schema }}</td>
+    <td>{{ object.database_or_schema|default_if_none:"" }}</td>
   </tr>
   <tr>
     <td><p class="font-weight-bold">Port</p></td>
-    <td>{{ object.port }}</td>
+    <td>{{ object.port|default_if_none:"" }}</td>
   </tr>
   <tr>
     <td><p class="font-weight-bold">Login</p></td>

@@ -8,14 +8,6 @@ from .service import CheckRunService
 from ..base.api import AuthPermission
 
 
-class CheckGroupViewSet(viewsets.ModelViewSet):
-    """ViewSet for the CheckGroup class"""
-
-    queryset = models.CheckGroup.objects.all()
-    serializer_class = serializers.CheckGroupSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
 class DatacheckViewSet(viewsets.ModelViewSet):
     """ViewSet for the Datacheck class"""
 
@@ -71,26 +63,24 @@ class RunCheck(CreateAPIView):
         return Response({"checkrun_id": checkrun_id}, status=status.HTTP_200_OK)
 
 
-class RunCheckGroup(CreateAPIView):
+class RunCheckTag(CreateAPIView):
     authentication_classes = (
         authentication.TokenAuthentication,
         authentication.SessionAuthentication,
     )
     permission_classes = (DatacheckRunPermission,)
-    serializer_class = serializers.CheckGroupRunCreateSerializer
+    serializer_class = serializers.CheckRunTagCreateSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            CheckRunService.run_check_group_api(
+            CheckRunService.run_check_tag(
                 serializer["checkgroup_name"].value,
                 serializer["environment"].value,
                 request.user,
             )
-        except (models.CheckGroup.DoesNotExist, models.Environment.DoesNotExist) as exc:
+        except models.Environment.DoesNotExist as exc:
             return Response(str(exc), status=400)
 
-        return Response(
-            {serializer["checkgroup_name"].value: "success"}, status=status.HTTP_200_OK
-        )
+        return Response({serializer["tag"].value: "success"}, status=status.HTTP_200_OK)

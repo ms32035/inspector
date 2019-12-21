@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "health_check",
     "djangocodemirror",
+    "taggit",
 ]
 LOCAL_APPS = [
     "inspector.base.apps.BaseConfig",
@@ -286,12 +287,14 @@ CODEMIRROR_SETTINGS["inspector"] = {
     "mode": "sql",
     "modes": ["sql", "python"],
     "matchBrackets": True,
-    "lineNumbers": False,
+    "lineNumbers": True,
+    "autoRefresh": True,
     "extraKeys": {"Ctrl-Space": "autocomplete"},
     "addons": [
         "CodeMirror/addon/edit/matchbrackets.js",
         "CodeMirror/addon/hint/show-hint.js",
         "CodeMirror/addon/hint/sql-hint.js",
+        "CodeMirror/addon/display/autorefresh.js",
     ],
     "extra_css": ["CodeMirror/addon/hint/show-hint.css"],
     "gutters": ["CodeMirror-lines"],
@@ -304,3 +307,5 @@ BOOTSTRAP4 = {
         "crossorigin": "anonymous",
     }
 }
+
+TAGGIT_CASE_INSENSITIVE = True

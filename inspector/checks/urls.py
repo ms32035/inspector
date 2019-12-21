@@ -12,43 +12,12 @@ from . import api
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"checkgroup", api.CheckGroupViewSet)
 
 urlpatterns = (
     # urls for Django Rest Framework API
     path("api/v1/", include(router.urls)),
     path("api/v1/runcheck/", api.RunCheck.as_view()),
-    path("api/v1/runcheckgroup/", api.RunCheckGroup.as_view()),
     path("apidocs/", include_docs_urls(title="Inspector API")),
-)
-
-urlpatterns += (
-    # urls for CheckGroup
-    path(
-        "checks/checkgroup/",
-        views.CheckGroupListView.as_view(),
-        name="checks_checkgroup_list",
-    ),
-    path(
-        "checks/checkgroup/create/",
-        views.CheckGroupCreateView.as_view(),
-        name="checks_checkgroup_create",
-    ),
-    path(
-        "checks/checkgroup/update/<int:pk>/",
-        views.CheckGroupUpdateView.as_view(),
-        name="checks_checkgroup_update",
-    ),
-    path(
-        "checks/checkgroup/delete/<int:pk>",
-        views.CheckGroupDeleteView.as_view(),
-        name="checks_checkgroup_delete",
-    ),
-    path(
-        "checks/checkgroup/run/<int:pk>",
-        views.CheckGroupRunView.as_view(),
-        name="checks_checkgroup_run",
-    ),
 )
 
 urlpatterns += (
@@ -67,6 +36,11 @@ urlpatterns += (
         "checks/checkrun/detail/<int:pk>/",
         views.CheckRunDetailView.as_view(),
         name="checks_checkrun_detail",
+    ),
+    path(
+        "checks/checkrun/runtag/",
+        views.CheckRunTagView.as_view(),
+        name="check_checkrun_runtag",
     ),
 )
 

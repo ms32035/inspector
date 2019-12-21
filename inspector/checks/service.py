@@ -2,8 +2,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 
 from inspector.taskapp.tasks import execute_check
-from .constants import STATUSES
-from .models import Datacheck, Environment, CheckRun, CheckGroup
+from .models import Datacheck, Environment, CheckRun
 
 
 class CheckRunService:
@@ -17,27 +16,17 @@ class CheckRunService:
         )
 
     @staticmethod
-    def run_check_group(checkgroup_id: int, environment: Environment, user: User):
-        checkgroup = CheckGroup.objects.get(id=checkgroup_id)
-
-        for chk in Datacheck.objects.filter(group=checkgroup):
-            CheckRunService._create_and_execute_checkrun(chk, environment, user)
-
-    @staticmethod
-    def run_check_group_api(checkgroup_name: str, environment: str, user: User):
-        checkgroup = CheckGroup.objects.get(name=checkgroup_name)
+    def run_check_tag(tag: str, environment: str, user: User):
         environment = Environment.objects.get(name=environment)
 
-        for chk in Datacheck.objects.filter(group=checkgroup):
+        for chk in Datacheck.objects.filter(tags__name__in=tag):
             CheckRunService._create_and_execute_checkrun(chk, environment, user)
 
     @staticmethod
     def _create_and_execute_checkrun(
         check: Datacheck, environment: Environment, user: User
     ) -> int:
-        check_run = CheckRun(
-            datacheck=check, environment=environment, status=STATUSES.NEW, user=user
-        )
+        check_run = CheckRun(datacheck=check, environment=environment, user=user)
         with transaction.atomic():
             check_run.save()
             transaction.on_commit(lambda: execute_check.delay(check_run.id))

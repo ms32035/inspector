@@ -9,7 +9,9 @@
       <th><p class="text-left"><i class="fas fa-globe-africa" title="Environment"></i></p></th>
       <th style="width: 12.5%">
         {% if perms.systems.add_environment %}
+          <p class="text-right">
           {% button_new 'systems_environment_create' %}
+          </p>
         {% endif %}
       </th>
     </tr>

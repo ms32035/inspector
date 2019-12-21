@@ -1,14 +1,14 @@
-from django.test import TestCase
 from random import shuffle
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
 
 from .constants import CHECK_TYPES, RELATIONS
-from .models import CheckGroup, Datacheck, CheckRun, EnvironmentStatus
+from .models import Datacheck, CheckRun, EnvironmentStatus
 from ..base.tests import TestUser
 from ..systems.tests import create_system, create_environment
 
@@ -39,14 +39,6 @@ def create_django_contrib_contenttypes_models_contenttype(**kwargs):
     return ContentType.objects.create(**defaults)
 
 
-def create_checkgroup(**kwargs):
-    defaults = {}
-    defaults["name"] = "checkgroup-{}".format(RANDOMS.pop())
-    defaults["description"] = "description"
-    defaults.update(**kwargs)
-    return CheckGroup.objects.create(**defaults)
-
-
 def create_datacheck(**kwargs):
     defaults = {}
     defaults["code"] = "datacheck-{}".format(RANDOMS.pop())
@@ -62,8 +54,6 @@ def create_datacheck(**kwargs):
     defaults["warning_type"] = None
     defaults["warning_logic"] = "warning_logic"
     defaults.update(**kwargs)
-    if "group" not in defaults:
-        defaults["group"] = create_checkgroup()
     if "left_system" not in defaults:
         defaults["left_system"] = create_system()
     if "right_system" not in defaults:
@@ -103,47 +93,6 @@ def create_environmentstatus(**kwargs):
     return EnvironmentStatus.objects.create(**defaults)
 
 
-class CheckGroupViewTest(TestCase):
-    """
-    Tests for CheckGroup
-    """
-
-    def setUp(self):
-        self.client = Client()
-        self.test_user = TestUser()
-        self.client.login(username="test", password="test")
-
-    def tearDown(self):
-        self.test_user.delete()
-
-    def test_list_checkgroup(self):
-        self.test_user.add_permission(CheckGroup, "view_checkgroup")
-        url = reverse("checks_checkgroup_list")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_create_checkgroup(self):
-        self.test_user.add_permission(CheckGroup, "add_checkgroup")
-        url = reverse("checks_checkgroup_create")
-        data = {
-            "name": "checkgroup-{}".format(RANDOMS.pop()),
-            "description": "description",
-        }
-        response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 302)
-
-    def test_update_checkgroup(self):
-        self.test_user.add_permission(CheckGroup, "change_checkgroup")
-        checkgroup = create_checkgroup()
-        data = {
-            "name": "checkgroup-{}".format(RANDOMS.pop()),
-            "description": "description",
-        }
-        url = reverse("checks_checkgroup_update", args=[checkgroup.pk])
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 302)
-
-
 class DatacheckViewTest(TestCase):
     """
     Tests for Datacheck
@@ -178,7 +127,6 @@ class DatacheckViewTest(TestCase):
             "warning_relation": "",
             "warning_type": "",
             "warning_logic": "",
-            "group": create_checkgroup().pk,
             "left_system": create_system().pk,
             "right_system": create_system().pk,
         }
@@ -207,7 +155,6 @@ class DatacheckViewTest(TestCase):
             "warning_relation": "",
             "warning_type": "",
             "warning_logic": "",
-            "group": create_checkgroup().pk,
             "left_system": create_system().pk,
             "right_system": create_system().pk,
         }
@@ -237,7 +184,6 @@ class CheckRunViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create_checkrun(self):
-
         self.test_user.add_permission(CheckRun, "add_checkrun")
         url = reverse("checks_checkrun_create")
         data = {"environment": create_environment(), "id": create_datacheck().pk}

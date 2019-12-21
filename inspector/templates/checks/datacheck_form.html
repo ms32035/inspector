@@ -9,12 +9,8 @@
     {% crispy form %}
   </form>
 
-  {% codemirror_field_css_assets form.left_logic %}
-  {% codemirror_field_js_assets form.left_logic %}
-  {% codemirror_field_css_assets form.right_logic %}
-  {% codemirror_field_js_assets form.right_logic %}
-  {% codemirror_field_css_assets form.warning_logic %}
-  {% codemirror_field_js_assets form.warning_logic %}
+  {% codemirror_field_css_assets form.left_logic form.right_logic form.warning_logic %}
+  {% codemirror_field_js_assets form.left_logic form.right_logic form.warning_logic %}
 
   <script>
     var left_logic_codemirror = CodeMirror.fromTextArea(

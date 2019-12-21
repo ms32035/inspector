@@ -1,37 +1,16 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 from inspector.systems.models import Environment, System
 from .constants import RELATIONS, STATUSES, RESULTS, CHECK_TYPES
 
 
-class CheckGroup(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ("-pk",)
-
-    def __unicode__(self):
-        return "%s" % self.pk
-
-    def get_url(self, action):
-        return reverse(f"checks_checkgroup_{action}", args=(self.pk,))
-
-    def get_name(self):
-        return self.name
-
-
 class Datacheck(models.Model):
     code = models.CharField(max_length=20, unique=True)
     description = models.TextField(null=True, blank=True)
-    group = models.ForeignKey(
-        CheckGroup, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    tags = TaggableManager(blank=True)
     weight = models.IntegerField(default=0)
     left_system = models.ForeignKey(
         System, on_delete=models.CASCADE, related_name="left_system"
@@ -74,7 +53,7 @@ class CheckRun(models.Model):
     environment = models.ForeignKey(Environment, on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
-    status = models.CharField(max_length=20, choices=STATUSES)
+    status = models.CharField(max_length=20, choices=STATUSES, default=STATUSES.NEW)
     result = models.CharField(max_length=20, choices=RESULTS, null=True)
     left_value = models.CharField(max_length=255, null=True, blank=True)
     right_value = models.CharField(max_length=255, null=True, blank=True)

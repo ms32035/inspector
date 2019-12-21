@@ -10,7 +10,9 @@
       <th><p class="text-left"><i class="far fa-window-maximize" title="Application"></i></p></th>
       <th style="width: 12.5%">
         {% if perms.systems.add_system %}
+          <p class="text-right">
           {% button_new 'systems_system_create' %}
+          </p>
         {% endif %}
       </th>
     </tr>

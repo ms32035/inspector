@@ -1,11 +1,14 @@
+from bootstrap_modal_forms.forms import BSModalForm
 from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from crispy_forms.bootstrap import TabHolder, Tab, PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
 from django import forms
 from djangocodemirror.widgets import CodeMirrorWidget
+from taggit.models import Tag
 
-from .models import CheckGroup, Datacheck, CheckRun, EnvironmentStatus
+from .models import Datacheck, CheckRun, EnvironmentStatus
+from ..base.components import fa_icon
 from ..base.constants import SUBMIT_CSS_CLASSES
 
 
@@ -15,20 +18,14 @@ class DatacheckRunForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
         fields = ["environment"]
 
 
-class CheckGroupRunForm(PopRequestMixin, forms.ModelForm):
+class CheckRunTagForm(BSModalForm):
+    tag = forms.ChoiceField(
+        choices=[(t, t) for t in Tag.objects.all().order_by("name")]
+    )
+
     class Meta:
         model = CheckRun
         fields = ["environment"]
-
-
-class CheckGroupForm(forms.ModelForm):
-    helper = FormHelper()
-    helper.add_input(Submit("submit", "Submit", css_class=SUBMIT_CSS_CLASSES))
-
-    class Meta:
-        model = CheckGroup
-        fields = ["name", "description"]
-        widgets = {"description": forms.Textarea({"cols": 40, "rows": 3})}
 
 
 def prepended_select_column(field: str, width: int, extra_classes: str = ""):
@@ -48,15 +45,20 @@ class DatacheckForm(forms.ModelForm):
                     "Check code",
                     template="components/forms/prepended_appended_text.html",
                 ),
-                css_class="form-group col-md-5 mb-0 mt-2",
+                css_class="form-group col-md-4 mb-0 mt-2",
             ),
-            Column(None, css_class="col-md-1"),
-            prepended_select_column("group", 3, "mb-0 mt-2"),
-            Column(None, css_class="col-md-1"),
+            Column(
+                PrependedText(
+                    "tags",
+                    "Tags",
+                    template="components/forms/prepended_appended_text.html",
+                ),
+                css_class="form-group col-md-6 mb-0 mt-2",
+            ),
             Column(
                 PrependedText(
                     "weight",
-                    '<i class="fas fa-balance-scale" title="Weight"></i>',
+                    fa_icon("balance-scale", "Weight"),
                     template="components/forms/prepended_appended_text.html",
                 ),
                 css_class="input-group-sm col-md-2 mb-0 mt-2",
@@ -117,7 +119,7 @@ class DatacheckForm(forms.ModelForm):
             "warning_relation",
             "warning_type",
             "warning_logic",
-            "group",
+            "tags",
         ]
         widgets = {
             "description": forms.Textarea({"cols": 40, "rows": 3}),
@@ -125,23 +127,21 @@ class DatacheckForm(forms.ModelForm):
             "right_logic": CodeMirrorWidget(config_name="inspector"),
             "warning_logic": CodeMirrorWidget(config_name="inspector"),
         }
-        system_icon = '<i class="fas fa-desktop" title="System"></i>'
-        logic_icon = '<i class="fas fa-code" title="Logic"></i>'
-        group_icon = '<i class="far fa-object-ungroup" title="Group"></i>'
+        system_icon = fa_icon("desktop", "System")
         labels = {
             "left_system": system_icon,
             "left_type": "Type",
-            "left_logic": logic_icon,
+            "left_logic": fa_icon("code", "Logic"),
             "right_system": system_icon,
             "right_type": "Type",
-            "right_logic": logic_icon,
+            "right_logic": fa_icon("code", "Logic"),
             "warning_type": "Type",
             "warning_relation": "Relation",
-            "warning_logic": logic_icon,
+            "warning_logic": fa_icon("code", "Logic"),
             "supports_warning": "Enabled",
             "code": False,
             "weight": False,
-            "group": group_icon,
+            "tags": False,
         }
 
 

@@ -3,12 +3,6 @@ from rest_framework import serializers
 from . import models
 
 
-class CheckGroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.CheckGroup
-        fields = ("pk", "name", "description")
-
-
 class DatacheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Datacheck
@@ -56,8 +50,6 @@ class CheckRunCreateSerializer(serializers.Serializer):
     environment = serializers.CharField(max_length=50, required=True, allow_blank=False)
 
 
-class CheckGroupRunCreateSerializer(serializers.Serializer):
-    checkgroup_name = serializers.CharField(
-        max_length=100, required=True, allow_blank=False
-    )
+class CheckRunTagCreateSerializer(serializers.Serializer):
+    tag = serializers.CharField(max_length=100, required=True, allow_blank=False)
     environment = serializers.CharField(max_length=50, required=True, allow_blank=False)

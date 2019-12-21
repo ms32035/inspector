@@ -20,19 +20,13 @@ DEFAULTS = {
     "Checks - read": {
         "datacheck": ["view"],
         "checkrun": ["view"],
-        "checkgroup": ["view"],
         "environmentstatus": ["view"],
     },
     "Checks - edit": {
         "datacheck": ["view", "add", "change", "delete"],
         "checkrun": ["view", "add", "change", "delete"],
-        "checkgroup": ["view", "add", "change", "delete"],
     },
-    "Checks - run": {
-        "datacheck": ["view"],
-        "checkrun": ["view", "add"],
-        "checkgroup": ["view"],
-    },
+    "Checks - run": {"datacheck": ["view"], "checkrun": ["view", "add"]},
 }
 
 
