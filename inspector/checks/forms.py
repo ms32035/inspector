@@ -19,9 +19,7 @@ class DatacheckRunForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
 
 
 class CheckRunTagForm(BSModalForm):
-    tag = forms.ChoiceField(
-        choices=[(t, t) for t in Tag.objects.all().order_by("name")]
-    )
+    tag = forms.ModelChoiceField(queryset=Tag.objects.all().order_by("name"))
 
     class Meta:
         model = CheckRun
