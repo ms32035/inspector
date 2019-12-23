@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from taggit.models import Tag
 from django.db import transaction
 
 from inspector.taskapp.tasks import execute_check
@@ -14,10 +15,10 @@ class CheckRunService:
         return CheckRunService.create_and_execute_checkrun(datacheck, environment, user)
 
     @staticmethod
-    def run_check_tag(tag: str, environment: str, user: User):
+    def run_check_tag(tag: Tag, environment: str, user: User):
         environment = Environment.objects.get(name=environment)
 
-        for chk in Datacheck.objects.filter(tags__name__in=tag):
+        for chk in Datacheck.objects.filter(tags__name__in=tag.name):
             CheckRunService.create_and_execute_checkrun(chk, environment, user)
 
     @staticmethod
