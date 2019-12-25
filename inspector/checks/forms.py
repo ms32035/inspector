@@ -1,5 +1,4 @@
 from bootstrap_modal_forms.forms import BSModalForm
-from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from crispy_forms.bootstrap import TabHolder, Tab, PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
@@ -12,7 +11,7 @@ from ..base.components import fa_icon
 from ..base.constants import SUBMIT_CSS_CLASSES
 
 
-class DatacheckRunForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
+class DatacheckRunForm(BSModalForm):
     class Meta:
         model = CheckRun
         fields = ["environment"]

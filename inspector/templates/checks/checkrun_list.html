@@ -2,12 +2,13 @@
 {% load static %}
 {% load bootstrap_pagination %}
 {% load buttons %}
+{% load modals %}
 {% load crispy_forms_tags %}
 {% block content %}
   <div class="card">
-      <div class="card-body">
-        {% crispy filter.form %}
-      </div>
+    <div class="card-body">
+      {% crispy filter.form %}
+    </div>
   </div>
 
   <table class="table table-borderless table-striped">
@@ -54,13 +55,20 @@
           {% endif %}
         </p>
         </td>
-        <td><p class="text-center">
-          {{ object.user.username }}
-        </p>
+        <td>
+          <p class="text-center">
+            {{ object.user.username }}
+          </p>
         </td>
         <td>
-          {% button_hoverdetail 'checks/checkrun_hoverdetail' object %}
-          {% button_rerun object %}
+          <p class="text-right">
+            {% button_hoverdetail 'checks/checkrun_hoverdetail' object %}
+            <button class="btn btn-outline-secondary btn-sm check-details btn-table" data-title="Details"
+                    data-url="{% url 'checks_datacheck_info' object.datacheck.id %}">
+              <span class="fas fa-info-circle fa-sm"></span>
+            </button>
+            {% button_rerun object %}
+          </p>
         </td>
       </tr>
     {% endfor %}
@@ -69,5 +77,24 @@
 
 
   {% bootstrap_paginate page_obj range=10 %}
+  {% modals_modal 'datacheck' %}
 
 {% endblock %}
+
+
+{% block javascript %}
+  {{ block.super }}
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".check-details").each(function () {
+        $(this).modalForm({
+          formURL: $(this).data('url'),
+          modalID: "#datacheck-modal"
+        });
+      });
+    });
+  </script>
+
+
+{% endblock javascript %}
