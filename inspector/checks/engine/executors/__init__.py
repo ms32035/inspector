@@ -4,48 +4,28 @@ from typing import Tuple, Optional
 from ..exceptions import CheckTypeNotSupported
 from ....systems.constants import APPLICATIONS
 from ....systems.models import Instance
+from ....systems.connectors import Connector
+
+EXECUTOR_SQL = {"module": "sql_executor", "class": "SQLExecutor"}
+
+EXECUTOR_SNOWFLAKE = {"module": "snowflake_executor", "class": "SnowflakeExecutor"}
 
 CONFIG = {
-    APPLICATIONS.POSTGRES: {
-        "executor.module": "sql_executor",
-        "executor.class": "SQLExecutor",
-        "params": {
-            "connection_string": "postgres+psycopg2://{login}:{password}@{host}:{port}/{db}"
-        },
-    },
-    APPLICATIONS.REDSHIFT: {
-        "executor.module": "sql_executor",
-        "executor.class": "SQLExecutor",
-        "params": {
-            "connection_string": "redshift+psycopg2://{login}:{password}@{host}:{port}/{db}"
-        },
-    },
-    APPLICATIONS.MYSQL: {
-        "executor.module": "sql_executor",
-        "executor.class": "SQLExecutor",
-        "params": {
-            "connection_string": "mysql://{login}:{password}@{host}:{port}/{db}"
-        },
-    },
-    APPLICATIONS.SNOWFLAKE: {
-        "executor.module": "snowflake_executor",
-        "executor.class": "SnowflakeExecutor",
-        "params": dict(),
-    },
+    APPLICATIONS.POSTGRES: EXECUTOR_SQL,
+    APPLICATIONS.REDSHIFT: EXECUTOR_SQL,
+    APPLICATIONS.MYSQL: EXECUTOR_SQL,
+    APPLICATIONS.SNOWFLAKE: EXECUTOR_SNOWFLAKE,
 }
 
 
-class CheckExecutor(metaclass=ABCMeta):
+class CheckExecutor(Connector, metaclass=ABCMeta):
     supported_check_types: Tuple = tuple()
 
     def __init__(self, instance: Optional[Instance], check_type):
-        self.instance = instance
+        Connector.__init__(self, instance)
         self.check_type = check_type
         if check_type not in self.supported_check_types:
             raise CheckTypeNotSupported
-
-    def test_connection(self):
-        pass
 
     def execute(self, check_logic):
         pass

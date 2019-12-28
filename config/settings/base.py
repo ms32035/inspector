@@ -82,7 +82,8 @@ LOCAL_APPS = [
     "inspector.base.apps.BaseConfig",
     "inspector.users.apps.UsersAppConfig",
     "inspector.checks.apps.ChecksConfig",
-    "inspector.systems.apps.SystemsConfig"
+    "inspector.systems.apps.SystemsConfig",
+    "inspector.profiling.apps.ProfilingConfig"
     # Your stuff: custom apps go here
 ]
 

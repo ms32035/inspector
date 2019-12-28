@@ -81,13 +81,27 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSystems">
               {% if perms.systems.view_system %}
-                <a class="dropdown-item" href="{% url 'systems_system_list' %}">Systems</a>
+                <a class="dropdown-item" href="{% url 'systems:system_list' %}">Systems</a>
               {% endif %}
               {% if perms.systems.view_environment %}
-                <a class="dropdown-item" href="{% url 'systems_environment_list' %}">Environments</a>
+                <a class="dropdown-item" href="{% url 'systems:environment_list' %}">Environments</a>
               {% endif %}
               {% if perms.systems.view_instance %}
-                <a class="dropdown-item" href="{% url 'systems_instance_list' %}">Instances</a>
+                <a class="dropdown-item" href="{% url 'systems:instance_list' %}">Instances</a>
+              {% endif %}
+              {% if perms.systems.view_dbtable %}
+                <a class="dropdown-item" href="{% url 'systems:table_list' %}">Tables</a>
+              {% endif %}
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSystems" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+              Profiling
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownSystems">
+              {% if perms.profiling.view_profile %}
+                <a class="dropdown-item" href="{% url 'profiling:profile_list' %}">Profiles</a>
               {% endif %}
             </div>
           </li>

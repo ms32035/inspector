@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% load buttons %}
+{% load modals %}
+{% load ui %}
+{% block content %}
+  <table class="table table-borderless table-striped">
+    <thead>
+    <tr>
+      <th><p class="text-left">{% fa 'system' %}</p></th>
+      <th><p class="text-center">{% fa 'schema' %}</p></th>
+      <th><p class="text-center">{% fa 'table' %}</p></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+      <tr>
+        <td>
+          <p class="text-left">
+            {{ object.system.name }}
+          </p>
+        </td>
+        <td><p class="text-center">
+          {{ object.schema }}
+        </p></td>
+        <td><p class="text-center">
+          {{ object.name }}
+        </p></td>
+        <td>
+          <p class="text-right">
+            {% button_profile object %}
+          </p>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% modals_modal 'dbtable' %}
+
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+
+  {% modals_js 'run' 'dbtable' %}
+
+{% endblock javascript %}

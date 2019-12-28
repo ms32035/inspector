@@ -2,15 +2,16 @@
 {% load static %}
 {% load buttons %}
 {% load modals %}
+{% load ui %}
 {% block content %}
   <table class="table table-borderless table-striped">
     <thead>
     <tr>
-      <th><p class="text-left"><i class="fas fa-globe-africa" title="Environment"></i></p></th>
+      <th><p class="text-left">{% fa 'environment' %}</p></th>
       <th style="width: 12.5%">
         {% if perms.systems.add_environment %}
           <p class="text-right">
-          {% button_new 'systems_environment_create' %}
+          {% button_new 'systems:environment_create' %}
           </p>
         {% endif %}
       </th>
@@ -43,6 +44,6 @@
 {% block javascript %}
 
   {{ block.super }}
-  {% modals_delete_js 'environment' %}
+  {% modals_js 'delete' 'environment' %}
 
 {% endblock %}

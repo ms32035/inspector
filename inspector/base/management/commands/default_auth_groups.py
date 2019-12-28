@@ -11,11 +11,13 @@ DEFAULTS = {
         "system": ["view"],
         "environment": ["view"],
         "instance": ["view"],
+        "dbtable": ["view"],
     },
     "Systems - edit": {
         "system": ["view", "add", "change", "delete"],
         "environment": ["view", "add", "change", "delete"],
         "instance": ["view", "add", "change", "delete"],
+        "dbtable": ["view", "add", "change", "delete"],
     },
     "Checks - read": {
         "datacheck": ["view"],
@@ -27,6 +29,8 @@ DEFAULTS = {
         "checkrun": ["view", "add", "change", "delete"],
     },
     "Checks - run": {"datacheck": ["view"], "checkrun": ["view", "add"]},
+    "Profiling - read": {"tableprofile": ["view"]},
+    "Profiling - run": {"tableprofile": ["view", "add"]},
 }
 
 

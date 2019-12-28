@@ -2,16 +2,17 @@
 {% load static %}
 {% load buttons %}
 {% load modals %}
+{% load ui %}
 {% block content %}
   <table class="table table-borderless table-striped">
     <thead>
     <tr>
-      <th><p class="text-left"><i class="fas fa-desktop" title="System"></i></p></th>
-      <th><p class="text-left"><i class="far fa-window-maximize" title="Application"></i></p></th>
+      <th><p class="text-left">{% fa 'system' %}</p></th>
+      <th><p class="text-left">{% fa 'application' %}</p></th>
       <th style="width: 12.5%">
         {% if perms.systems.add_system %}
           <p class="text-right">
-          {% button_new 'systems_system_create' %}
+          {% button_new 'systems:system_create' %}
           </p>
         {% endif %}
       </th>
@@ -43,6 +44,6 @@
 {% block javascript %}
 
   {{ block.super }}
-  {% modals_delete_js 'system' %}
+  {% modals_js 'delete' 'system' %}
 
 {% endblock %}

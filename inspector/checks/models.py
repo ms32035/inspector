@@ -4,7 +4,8 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 
 from inspector.systems.models import Environment, System
-from .constants import RELATIONS, STATUSES, RESULTS, CHECK_TYPES
+from .constants import RELATIONS, RESULTS, CHECK_TYPES
+from ..base.constants import STATUSES
 
 
 class Datacheck(models.Model):

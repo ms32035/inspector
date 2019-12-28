@@ -16,73 +16,69 @@ urlpatterns = (
 
 urlpatterns += (
     # urls for System
-    path("systems/system/", views.SystemListView.as_view(), name="systems_system_list"),
+    path("system/", views.SystemListView.as_view(), name="system_list"),
+    path("system/create/", views.SystemCreateView.as_view(), name="system_create",),
     path(
-        "systems/system/create/",
-        views.SystemCreateView.as_view(),
-        name="systems_system_create",
-    ),
-    path(
-        "systems/system/update/<int:pk>/",
+        "system/update/<int:pk>/",
         views.SystemUpdateView.as_view(),
-        name="systems_system_update",
+        name="system_update",
     ),
     path(
-        "systems/system/delete/<int:pk>",
+        "system/delete/<int:pk>",
         views.SystemDeleteView.as_view(),
-        name="systems_system_delete",
+        name="system_delete",
     ),
 )
 
 urlpatterns += (
     # urls for Environment
+    path("environment/", views.EnvironmentListView.as_view(), name="environment_list",),
     path(
-        "systems/environment/",
-        views.EnvironmentListView.as_view(),
-        name="systems_environment_list",
-    ),
-    path(
-        "systems/environment/create/",
+        "environment/create/",
         views.EnvironmentCreateView.as_view(),
-        name="systems_environment_create",
+        name="environment_create",
     ),
     path(
-        "systems/environment/update/<int:pk>/",
+        "environment/update/<int:pk>/",
         views.EnvironmentUpdateView.as_view(),
-        name="systems_environment_update",
+        name="environment_update",
     ),
     path(
-        "systems/environment/delete/<int:pk>",
+        "environment/delete/<int:pk>",
         views.EnvironmentDeleteView.as_view(),
-        name="systems_environment_delete",
+        name="environment_delete",
     ),
 )
 
 urlpatterns += (
     # urls for Instance
+    path("instance/", views.InstanceListView.as_view(), name="instance_list",),
     path(
-        "systems/instance/",
-        views.InstanceListView.as_view(),
-        name="systems_instance_list",
+        "instance/create/", views.InstanceCreateView.as_view(), name="instance_create",
     ),
     path(
-        "systems/instance/create/",
-        views.InstanceCreateView.as_view(),
-        name="systems_instance_create",
-    ),
-    path(
-        "systems/instance/detail/<int:pk>/",
+        "instance/detail/<int:pk>/",
         views.InstanceDetailView.as_view(),
-        name="systems_instance_detail",
+        name="instance_detail",
     ),
     path(
-        "systems/instance/update/<int:pk>/",
+        "instance/update/<int:pk>/",
         views.InstanceUpdateView.as_view(),
-        name="systems_instance_update",
+        name="instance_update",
     ),
     path(
-        "systems/instance/delete/<int:pk>/",
+        "instance/delete/<int:pk>/",
         views.InstanceDeleteView.as_view(),
-        name="systems_instance_delete",
+        name="instance_delete",
     ),
+    path(
+        "instance/reflect/<int:pk>/",
+        views.InstanceReflectView.as_view(),
+        name="instance_reflect",
+    ),
+)
+
+urlpatterns += (
+    # urls for DBTable
+    path("tables/", views.DbTableListView.as_view(), name="table_list",),
 )

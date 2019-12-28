@@ -2,6 +2,7 @@ from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages import success
 from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     ListView,
@@ -10,7 +11,7 @@ from django.views.generic import (
     DeleteView,
     UpdateView,
     FormView,
-    RedirectView,
+    View,
 )
 from django_filters.views import BaseFilterView
 
@@ -69,15 +70,15 @@ class DatacheckRunView(
 datacheck_run_view = DatacheckRunView.as_view()
 
 
-class CheckRunRerunView(PermissionRequiredMixin, PassRequestMixin, RedirectView):
+class CheckRunRerunView(PermissionRequiredMixin, View):
     permission_required = "checks.add_checkrun"
     success_message = "Success: Check was retriggered."
     success_url = reverse_lazy("checks_checkrun_list")
 
-    def get_redirect_url(self, *args, **kwargs):
-        CheckRunService.checkrun_rerun(kwargs["pk"], self.request.user)
+    def get(self, request, *args, **kwargs):
+        CheckRunService.checkrun_rerun(kwargs["pk"], request.user)
         success(self.request, self.success_message)
-        return self.success_url
+        return redirect(self.success_url)
 
 
 class CheckRunTagView(
@@ -171,14 +172,12 @@ class DatacheckInfoView(PermissionRequiredMixin, DetailView):
     template_name = "checks/datacheck_info.html"
 
 
-class EnvironmentStatusRerunView(
-    PermissionRequiredMixin, PassRequestMixin, RedirectView
-):
+class EnvironmentStatusRerunView(PermissionRequiredMixin, View):
     permission_required = "checks.add_checkrun"
     success_message = "Success: Check was retriggered."
     success_url = reverse_lazy("checks_checkrun_list")
 
-    def get_redirect_url(self, *args, **kwargs):
-        EnvironmentStatusService.env_status_rerun(kwargs["pk"], self.request.user)
+    def get(self, request, *args, **kwargs):
+        EnvironmentStatusService.env_status_rerun(kwargs["pk"], request.user)
         success(self.request, self.success_message)
-        return self.success_url
+        return redirect(self.success_url)

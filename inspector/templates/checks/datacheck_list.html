@@ -2,19 +2,21 @@
 {% load static i18n %}
 {% load buttons %}
 {% load modals %}
+{% load ui %}
 {% block title %}Checks{% endblock %}
 
 {% block content %}
   <table id="checks" class="table table-borderless table-striped">
     <thead>
-    <th><p class="text-left"><i class="fas fa-list" title="Check code"></i></p></th>
+    <th><p class="text-left">{% fa 'datacheck' %}</p></th>
     <th><p class="text-center"><i class="fas fa-tags" title="Tags"></i></p></th>
-    <th><p class="text-center"><i class="fas fa-desktop" title="System"></i></p></th>
+    <th><p class="text-center">{% fa 'system' %}</p></th>
     <th><p class="text-center"><i class="fas fa-balance-scale" title="Weight"></i></p></th>
     <th>
       <p class="text-right">
       {% if perms.checks.add_checkrun %}
-        <button class="check-run-tag btn btn-outline-success btn-sm" type="button" name="button">
+        <button class="datacheck-run-tag btn btn-outline-success btn-sm" type="button" name="button"
+        data-url="{% url 'check_checkrun_runtag' %}">
           <i class="fas fa-play" title="Run checks"></i>
         </button>
       {% endif %}
@@ -39,7 +41,7 @@
         <td><p class="text-center">{{ object.weight }}</p></td>
         <td>
           <p class="text-right">
-            <button class="btn btn-outline-secondary btn-sm check-details btn-table" data-title="Details"
+            <button class="btn btn-outline-secondary btn-sm datacheck-details btn-table" data-title="Details"
                     data-url="{% url 'checks_datacheck_info' object.id %}">
               <span class="fas fa-info-circle fa-sm"></span></button>
             <a href="{% url 'checks_checkrun_list' %}?datacheck={{ object.id }}" title="Runs">
@@ -70,22 +72,10 @@
 {% block javascript %}
   {{ block.super }}
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $(".check-details").each(function () {
-        $(this).modalForm({
-          formURL: $(this).data('url'),
-          modalID: "#datacheck-modal"
-        });
-      });
-      $(".check-run-tag").modalForm({
-        formURL: "{% url 'check_checkrun_runtag' %}",
-        modalID: "#datacheck-modal"
-      });
-    });
-  </script>
 
-  {% modals_run_js 'datacheck' %}
-  {% modals_delete_js 'datacheck' %}
+  {% modals_js 'run-tag' 'datacheck' %}
+  {% modals_js 'details' 'datacheck' %}
+  {% modals_js 'run' 'datacheck' %}
+  {% modals_js 'delete' 'datacheck' %}
 
 {% endblock javascript %}
