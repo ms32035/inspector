@@ -31,6 +31,7 @@ django-health-check==3.11.1  # https://github.com/KristianOellegaard/django-heal
 django-import-export==2.0
 django-appconf==1.0.3
 django-taggit==1.2.0
+django-storages==1.8
 
 tornado==6.0.3  # https://github.com/tornadoweb/tornado
 sqlalchemy==1.3.12

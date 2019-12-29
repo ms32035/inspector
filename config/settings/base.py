@@ -58,7 +58,6 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 'django.contrib.humanize', # Handy template tags
     "django.contrib.admin",
 ]
 THIRD_PARTY_APPS = [
@@ -325,3 +324,12 @@ BOOTSTRAP4 = {
 }
 
 TAGGIT_CASE_INSENSITIVE = True
+
+# Profiling storage
+
+DEFAULT_FILE_STORAGE = env.str(
+    "DJANGO_DEFAULT_FILE_STORAGE", "django.core.files.storage.FileSystemStorage"
+)
+PROFILING_REPORTS_PATH = env.str("DJANGO_PROFILING_REPORTS_PATH", "profiling_reports")
+AWS_STORAGE_BUCKET_NAME = env.str("DJANGO_AWS_STORAGE_BUCKET_NAME", None)
+AWS_DEFAULT_ACL = None

@@ -13,7 +13,7 @@ class TableProfile(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
     error_message = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    result = models.FileField(max_length=255)
+    result = models.FileField(max_length=255, upload_to=settings.PROFILING_REPORTS_PATH)
     rows = models.IntegerField(null=True)
 
     class Meta:
