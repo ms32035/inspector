@@ -1,24 +1,16 @@
-FROM python:3.7-alpine
+FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
 ARG EXTRA_REQUIREMENTS
 ARG EXTRA_PACKAGES
 
-RUN apk update \
-  # psycopg2 dependencies
-  && apk add --virtual build-deps gcc python3-dev musl-dev \
-  && apk add postgresql-dev \
-  # Pillow dependencies
-  && apk add jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev \
-  # CFFI dependencies
-  && apk add libffi-dev py-cffi
-
-RUN addgroup -S django \
-    && adduser -S -G django django
+RUN addgroup --system django \
+    && adduser --system django \
+    && adduser django django
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
-RUN pip install --no-cache-dir -r /requirements/production.txt
+RUN pip install --no-cache-dir --prefer-binary -r /requirements/production.txt
 
 COPY ./compose/master/inspector/entrypoint /entrypoint
 COPY ./compose/master/inspector/extras /extras
