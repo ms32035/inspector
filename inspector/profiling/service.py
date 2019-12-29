@@ -19,8 +19,9 @@ logger = logging.getLogger(__name__)
 class ProfilerService(metaclass=ABCMeta):
     def __init__(self, profile: TableProfile):
         self.profile: TableProfile = profile
+
         instance = Instance.objects.get(
-            system=profile.system, environment=profile.environment
+            system=profile.dbtable.system, environment=profile.dbtable.environment
         )
         self.connector: Connector = get_connector_for_instance(instance)
         self.report_file_name: Optional[str] = None
@@ -37,8 +38,8 @@ class ProfilerService(metaclass=ABCMeta):
         self.report_file_name = (
             "__".join(
                 [
-                    self.profile.system.name,
-                    self.profile.environment.name,
+                    self.profile.dbtable.system.name,
+                    self.profile.dbtable.environment.name,
                     self.profile.dbtable.fullname,
                     self.profile.start_time.strftime("%Y%m%d_%H%M%S"),
                 ]
@@ -59,6 +60,9 @@ class ProfilerService(metaclass=ABCMeta):
         if self.status:
             self.profile.end_time = dt.now(tz=utc)
             self.profile.status = STATUSES.FINISHED
+            self.profile.dbtable.rows = self.profile.rows
+            self.profile.dbtable.last_profiling_at = dt.now(tz=utc)
+            self.profile.dbtable.save()
         else:
             self.profile.status = STATUSES.ERROR
         self.profile.save()

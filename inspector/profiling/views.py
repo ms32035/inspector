@@ -1,45 +1,33 @@
-from bootstrap_modal_forms.mixins import PassRequestMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, View
+from django.views.generic import ListView, View
 from django_filters.views import BaseFilterView
 
 from .filters import TableProfileFilter
-from .forms import TableProfileRunForm
 from .models import TableProfile
 from ..systems.models import DbTable
 from ..taskapp.tasks import profile_table
 
 
-class TableProfileRunView(
-    PermissionRequiredMixin, PassRequestMixin, SuccessMessageMixin, CreateView
-):
+class TableProfileCreateView(PermissionRequiredMixin, View, SuccessMessageMixin):
     permission_required = "profiling.add_tableprofile"
-    template_name = "components/modals_run.html"
-    form_class = TableProfileRunForm
     success_message = "Success: Profiling job was triggered."
     success_url = reverse_lazy("profiling:profile_list")
 
-    def form_valid(self, form):
-        table = DbTable.objects.get(id=self.kwargs["pk"])
-        form.instance.dbtable_id = self.kwargs["pk"]
-        form.instance.user = self.request.user
-        form.instance.system = table.system
-        # TODO - check if system is available in environment
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        if not self.request.is_ajax():
-            profile_table.delay(self.object.id, "pandas")
-        return super().get_success_url()
+    def get(self, request, *args, **kwargs):
+        profile = TableProfile(
+            dbtable=DbTable.objects.get(id=self.kwargs["pk"]), user=request.user
+        )
+        profile.save()
+        profile_table.delay(profile.id, "pandas")
+        return redirect(self.success_url)
 
 
 class TableProfileListView(PermissionRequiredMixin, BaseFilterView, ListView):
     permission_required = "profiling.view_tableprofile"
-    model = TableProfile
     paginate_by = 50
     filterset_class = TableProfileFilter
 

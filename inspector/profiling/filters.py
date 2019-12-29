@@ -1,15 +1,15 @@
 import django_filters
 
 from .forms import TableProfileFilterForm
-from ..base.constants import ICONS
 from .models import TableProfile
+from ..base.constants import ICONS
 
 
 class TableProfileFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.filters["environment"].label = ICONS["environment"]
-        self.filters["system"].label = ICONS["system"]
+        self.filters["dbtable__system"].label = ICONS["system"]
+        self.filters["dbtable__environment"].label = ICONS["environment"]
         self.filters["status"].label = ICONS["status"]
         self.filters["user"].label = ICONS["user"]
         self.filters["dbtable"].label = ICONS["table"]
@@ -18,5 +18,12 @@ class TableProfileFilter(django_filters.FilterSet):
 
     class Meta:
         model = TableProfile
-        fields = ["environment", "system", "dbtable", "user", "status", "start_time"]
+        fields = [
+            "dbtable",
+            "user",
+            "status",
+            "start_time",
+            "dbtable__environment",
+            "dbtable__system",
+        ]
         form = TableProfileFilterForm

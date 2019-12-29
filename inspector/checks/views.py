@@ -1,6 +1,5 @@
 from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.messages import success
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
@@ -70,14 +69,13 @@ class DatacheckRunView(
 datacheck_run_view = DatacheckRunView.as_view()
 
 
-class CheckRunRerunView(PermissionRequiredMixin, View):
+class CheckRunRerunView(PermissionRequiredMixin, SuccessMessageMixin, View):
     permission_required = "checks.add_checkrun"
     success_message = "Success: Check was retriggered."
     success_url = reverse_lazy("checks_checkrun_list")
 
     def get(self, request, *args, **kwargs):
         CheckRunService.checkrun_rerun(kwargs["pk"], request.user)
-        success(self.request, self.success_message)
         return redirect(self.success_url)
 
 
@@ -172,12 +170,11 @@ class DatacheckInfoView(PermissionRequiredMixin, DetailView):
     template_name = "checks/datacheck_info.html"
 
 
-class EnvironmentStatusRerunView(PermissionRequiredMixin, View):
+class EnvironmentStatusRerunView(PermissionRequiredMixin, SuccessMessageMixin, View):
     permission_required = "checks.add_checkrun"
     success_message = "Success: Check was retriggered."
     success_url = reverse_lazy("checks_checkrun_list")
 
     def get(self, request, *args, **kwargs):
         EnvironmentStatusService.env_status_rerun(kwargs["pk"], request.user)
-        success(self.request, self.success_message)
         return redirect(self.success_url)

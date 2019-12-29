@@ -2,12 +2,10 @@ from django.conf import settings
 from django.db import models
 
 from ..base.constants import STATUSES
-from ..systems.models import DbTable, System, Environment
+from ..systems.models import DbTable
 
 
 class TableProfile(models.Model):
-    system = models.ForeignKey(System, on_delete=models.CASCADE)
-    environment = models.ForeignKey(Environment, on_delete=models.CASCADE)
     dbtable = models.ForeignKey(DbTable, on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)

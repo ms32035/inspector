@@ -31,8 +31,8 @@
     <tbody>
     {% for object in object_list %}
       <tr>
-        <td><p class="text-left">{{ object.system.name }}</p></td>
-        <td><p class="text-center">{{ object.environment.name }}</p></td>
+        <td><p class="text-left">{{ object.dbtable.system.name }}</p></td>
+        <td><p class="text-center">{{ object.dbtable.environment.name }}</p></td>
         <td><p class="text-center">{{ object.dbtable.schema }}</p></td>
         <td><p class="text-center">{{ object.dbtable.name }}</p></td>
         <td><p class="text-center">{{ object.start_time|default_if_none:"" }}</p></td>

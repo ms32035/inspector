@@ -28,7 +28,11 @@ class MetadataService:
             if k not in db_tables.values_list("fullname", flat=True):
                 create_list.append(
                     DbTable(
-                        system=self.instance.system, fullname=k, schema=v[0], name=v[1]
+                        system=self.instance.system,
+                        environment=self.instance.environment,
+                        fullname=k,
+                        schema=v[0],
+                        name=v[1],
                     )
                 )
         DbTable.objects.bulk_create(create_list)

@@ -1,6 +1,6 @@
 from bootstrap_modal_forms.mixins import DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.messages import success
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     DetailView,
@@ -12,6 +12,7 @@ from django.views.generic import (
 )
 from django_filters.views import BaseFilterView
 
+from .filters import DbTableFilter
 from .forms import SystemForm, EnvironmentForm, InstanceForm
 from .models import System, Environment, Instance, DbTable
 from ..taskapp.tasks import reflect_instance
@@ -121,18 +122,24 @@ class InstanceDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView
 
 class DbTableListView(PermissionRequiredMixin, BaseFilterView, ListView):
     permission_required = "systems.view_dbtable"
-    model = DbTable
+    paginate_by = 50
+    filterset_class = DbTableFilter
+
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get("paginate_by", self.paginate_by)
 
     def get_queryset(self):
-        return DbTable.objects.select_related()
+        qs = DbTable.objects.select_related()
+        qs_filtered_list = DbTableFilter(self.request.GET, queryset=qs)
+
+        return qs_filtered_list.qs
 
 
-class InstanceReflectView(PermissionRequiredMixin, RedirectView):
+class InstanceReflectView(PermissionRequiredMixin, RedirectView, SuccessMessageMixin):
     permission_required = "systems.add_dbtable"
     success_message = "Success: Reflection job started."
     success_url = reverse_lazy("systems:table_list")
 
     def get_redirect_url(self, *args, **kwargs):
         reflect_instance.delay(kwargs["pk"])
-        success(self.request, self.success_message)
         return self.success_url

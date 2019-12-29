@@ -75,11 +75,17 @@ class Instance(models.Model):
 
 class DbTable(SoftDeletionModel):
     system = models.ForeignKey(System, on_delete=models.PROTECT)
+    environment = models.ForeignKey(Environment, on_delete=models.PROTECT)
     fullname = models.CharField(max_length=255)
     schema = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
+    last_profiling_at = models.DateTimeField(null=True)
+    rows = models.IntegerField(null=True)
 
-    unique_together = ((system, fullname),)
+    unique_together = ((system, environment, fullname),)
+
+    class Meta:
+        ordering = ("system", "environment", "fullname")
 
     def get_name(self):
         return self.fullname
