@@ -18,3 +18,6 @@ class TableProfile(models.Model):
 
     class Meta:
         ordering = ("-pk",)
+
+    def __str__(self):
+        return f"{self.dbtable.fullname} - {self.created_at}"

@@ -2,22 +2,24 @@ import logging
 from datetime import datetime as dt
 from importlib import import_module
 from typing import Optional
-from pytz import utc
 
+from pytz import utc
 
 from .exceptions import CheckExecutorException, InstanceNotFound
 from .executors import CheckExecutor, CONFIG
 from .executors.python_executor import PythonExecutor
 from ..constants import RELATIONS, RESULTS
-from ...base.constants import STATUSES
 from ..models import CheckRun, Datacheck, EnvironmentStatus
+from ...base.constants import STATUSES
+from ...base.mixins import ExceptionCollectorMixin
 from ...systems.models import Instance, System
 
 logger = logging.getLogger(__name__)
 
 
-class CheckProcessor:
+class CheckProcessor(ExceptionCollectorMixin):
     def __init__(self, checkrun_id: int):
+        super().__init__()
         self.checkrun: CheckRun = CheckRun.objects.get(id=checkrun_id)
         self.datacheck: Datacheck = self.checkrun.datacheck
         self.left_executor: Optional[CheckExecutor] = None
@@ -25,35 +27,31 @@ class CheckProcessor:
 
     def prepare_check(self) -> bool:
 
-        errors = []
-
         try:
             self.left_executor = self.get_executor(
                 system=self.datacheck.left_system, check_type=self.datacheck.left_type
             )
         except CheckExecutorException as exc:
-            errors.append(repr(exc))
+            self.add_exception(exc)
 
         try:
             self.right_executor = self.get_executor(
                 system=self.datacheck.right_system, check_type=self.datacheck.right_type
             )
         except CheckExecutorException as exc:
-            errors.append(repr(exc))
+            self.add_exception(exc)
 
-        if errors:
-            self.checkrun.error_message = "\n".join(errors)
-            self.checkrun.status = STATUSES.ERROR
-            status = False
-        else:
+        if self.status:
             logger.info("Starting check -  %s", self.datacheck.code)
             self.checkrun.status = STATUSES.RUNNING
             self.checkrun.start_time = dt.now(utc)
-            status = True
+        else:
+            self.checkrun.error_message = self.errors_text()
+            self.checkrun.status = STATUSES.ERROR
 
         self.checkrun.save()
 
-        return status
+        return self.status
 
     def get_executor(self, system: System, check_type) -> CheckExecutor:
         if system is None:
@@ -67,7 +65,7 @@ class CheckProcessor:
             executor.get_engine()
             executor.test_connection()
         except Exception as exc:
-            raise CheckExecutorException(exc)
+            self.add_exception(CheckExecutorException(exc))
 
         return executor
 
@@ -93,50 +91,44 @@ class CheckProcessor:
 
     def execute_checks(self):
 
-        status = True
         result = None
-        errors = list()
 
         try:
             left_value = self.left_executor.execute(self.datacheck.left_logic)
             self.checkrun.left_value = str(left_value)
         except Exception as exc:
-            errors.append(str(exc))
-            status = False
+            self.add_exception(exc)
 
         try:
             right_value = self.right_executor.execute(self.datacheck.right_logic)
             self.checkrun.right_value = str(right_value)
         except Exception as exc:
-            errors.append(str(exc))
-            status = False
+            self.add_exception(exc)
 
-        if status:
+        if self.status:
             comparator = CheckComparator(self.datacheck)
             try:
                 result = comparator.compare(left_value, right_value)
             except TypeError as exc:
-                errors.append(str(exc))
-                status = False
+                self.add_exception(exc)
 
-            if result is None and self.datacheck.supports_warning and status:
+            if result is None and self.datacheck.supports_warning and self.status:
                 try:
                     warning_value = self.right_executor.execute(
                         self.datacheck.warning_logic
                     )
                     self.checkrun.warning_value = str(warning_value)
                 except Exception as exc:
-                    errors.append(str(exc))
-                    status = False
+                    self.add_exception(exc)
 
         end_time = dt.now(utc)
 
-        if status:
+        if self.status:
             self.checkrun.status = STATUSES.FINISHED
             self.checkrun.result = result
             self.checkrun.end_time = end_time
         else:
-            self.checkrun.error_message = "\n".join(errors)
+            self.checkrun.error_message = self.errors_text()
             self.checkrun.status = STATUSES.ERROR
 
         self.checkrun.save()
@@ -154,7 +146,7 @@ class CheckProcessor:
             )
 
         environment_status.result = result
-        if status:
+        if self.status:
             environment_status.last_start_time = self.checkrun.start_time
             environment_status.last_end_time = end_time
             environment_status.status = STATUSES.FINISHED

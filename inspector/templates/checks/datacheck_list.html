@@ -9,7 +9,7 @@
   <table id="checks" class="table table-borderless table-striped">
     <thead>
     <th><p class="text-left">{% fa 'datacheck' %}</p></th>
-    <th><p class="text-center"><i class="fas fa-tags" title="Tags"></i></p></th>
+    <th><p class="text-center">{% fa 'tags' %}</p></th>
     <th><p class="text-center">{% fa 'system' %}</p></th>
     <th><p class="text-center"><i class="fas fa-balance-scale" title="Weight"></i></p></th>
     <th>
@@ -32,7 +32,7 @@
         <td>{{ object.code }}</td>
         <td>
           <p class="text-center">
-            {% for tag in object.tags.all %}
+            {% for tag in object.tags.all|dictsort:"name" %}
               <span class="badge badge-secondary">{{ tag.name }}</span>
             {% endfor %}
           </p>

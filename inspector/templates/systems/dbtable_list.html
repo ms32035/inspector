@@ -48,6 +48,11 @@
         </p></td>
         <td>
           <p class="text-right">
+            <a href="{% url 'profiling:profile_list' %}?dbtable={{ object.id }}" title="Runs">
+              <button class="btn btn-outline-secondary btn-sm btn-table">
+                <span class="far fa-clock fa-sm"></span>
+              </button>
+            </a>
             {% button_profile object %}
           </p>
         </td>

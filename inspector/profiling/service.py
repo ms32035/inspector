@@ -10,14 +10,16 @@ from pytz import utc
 
 from .models import TableProfile
 from ..base.constants import STATUSES
+from ..base.mixins import ExceptionCollectorMixin
 from ..systems.connectors import Connector, get_connector_for_instance
 from ..systems.models import Instance
 
 logger = logging.getLogger(__name__)
 
 
-class ProfilerService(metaclass=ABCMeta):
+class ProfilerService(ExceptionCollectorMixin, metaclass=ABCMeta):
     def __init__(self, profile: TableProfile):
+        super().__init__()
         self.profile: TableProfile = profile
 
         instance = Instance.objects.get(
@@ -26,10 +28,16 @@ class ProfilerService(metaclass=ABCMeta):
         self.connector: Connector = get_connector_for_instance(instance)
         self.report_file_name: Optional[str] = None
         self.report_file_path: Optional[str] = None
-        self.status: bool = True
 
     def profile_table(self):
         raise NotImplementedError
+
+    def run_profiling(self):
+        if self.status:
+            try:
+                self.profile_table()
+            except Exception as exc:
+                self.add_exception(exc)
 
     def start_profiling(self):
         self.profile.start_time = dt.now(tz=utc)
@@ -50,10 +58,13 @@ class ProfilerService(metaclass=ABCMeta):
 
     def save_report(self):
         if self.status:
-            with open(self.report_file_path, "rb") as report_file:
-                self.profile.result.save(
-                    name=self.report_file_name, content=File(report_file)
-                )
+            try:
+                with open(self.report_file_path, "rb") as report_file:
+                    self.profile.result.save(
+                        name=self.report_file_name, content=File(report_file)
+                    )
+            except Exception as exc:
+                self.add_exception(exc)
 
     def save_profile(self):
         if self.status:
@@ -63,6 +74,7 @@ class ProfilerService(metaclass=ABCMeta):
             self.profile.dbtable.last_profiling_at = dt.now(tz=utc)
             self.profile.dbtable.save()
         else:
+            self.profile.error_message = self.errors_text()
             self.profile.status = STATUSES.ERROR
         self.profile.save()
 

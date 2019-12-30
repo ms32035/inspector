@@ -19,6 +19,7 @@ ICONS = {
     "host": '<i class="fas fa-network-wired" title="Host"></i>',
     "application": '<i class="far fa-window-maximize" title="Application"></i>',
     "last_run": '<i class="far fa-clock" title="Last run"></i>',
+    "tags": '<i class="fas fa-tags" title="Tags"></i>',
 }
 
 STATUS_ICONS = {
