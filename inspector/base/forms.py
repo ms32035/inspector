@@ -39,3 +39,10 @@ class InspectorSignupForm(SignupForm):
     helper = FormHelper()
     helper.form_show_labels = False
     helper.add_input(Submit("submit", "Sign Up", css_class=SUBMIT_CSS_CLASSES))
+
+
+def prepended_select_column(field: str, width: int, extra_classes: str = ""):
+    return Column(
+        Field(field, template="components/forms/select_prepend.html"),
+        css_class=f"form-group col-md-{width} {extra_classes}",
+    )

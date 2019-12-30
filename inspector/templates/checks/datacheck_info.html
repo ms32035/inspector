@@ -12,6 +12,14 @@
     </td>
   </tr>
   <tr>
+    <td class="w-25"><p class="font-weight-bold">Relation</p></td>
+    <td>
+      <code>
+        {{ object.get_relation_display|default_if_none:"" }}
+      </code>
+    </td>
+  </tr>
+  <tr>
     <td class="w-25"><p class="font-weight-bold">Right logic</p></td>
     <td>
       <code>
@@ -19,12 +27,14 @@
       </code>
     </td>
   </tr>
+  {% if object.warning_logic %}
   <tr>
     <td class="w-25"><p class="font-weight-bold">Warning logic</p></td>
     <td>
       <code>
-        {{ object.warning_logic|default_if_none:"" }}
+        {{ object.warning_logic }}
       </code>
     </td>
   </tr>
+  {% endif %}
 </table>

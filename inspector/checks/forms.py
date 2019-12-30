@@ -1,18 +1,18 @@
 from bootstrap_modal_forms.forms import BSModalForm
-from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from crispy_forms.bootstrap import TabHolder, Tab, PrependedText
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Row, Column, Field, HTML
+from crispy_forms.layout import Submit, Layout, Row, Column
 from django import forms
 from djangocodemirror.widgets import CodeMirrorWidget
 from taggit.models import Tag
 
 from .models import Datacheck, CheckRun, EnvironmentStatus
-from ..base.components import fa_icon
+from ..base.components import fa_icon, button_reset
 from ..base.constants import SUBMIT_CSS_CLASSES
+from ..base.forms import prepended_select_column
 
 
-class DatacheckRunForm(PopRequestMixin, CreateUpdateAjaxMixin, forms.ModelForm):
+class DatacheckRunForm(BSModalForm):
     class Meta:
         model = CheckRun
         fields = ["environment"]
@@ -24,13 +24,6 @@ class CheckRunTagForm(BSModalForm):
     class Meta:
         model = CheckRun
         fields = ["environment"]
-
-
-def prepended_select_column(field: str, width: int, extra_classes: str = ""):
-    return Column(
-        Field(field, template="components/forms/select_prepend.html"),
-        css_class=f"form-group col-md-{width} {extra_classes}",
-    )
 
 
 class DatacheckForm(forms.ModelForm):
@@ -192,12 +185,7 @@ class CheckRunFilterForm(forms.ModelForm):
                 css_class="form-group col-md-1 mb-1",
             ),
             Column(
-                HTML(
-                    """
-                <a class="btn btn-outline-danger btn-block btn-sm"
-                href={% url "checks_checkrun_list" %}>Reset</a>
-                """
-                ),
+                button_reset("checks_checkrun_list"),
                 css_class="form-group col-md-1 mb-1",
             ),
             css_class="form-row",
@@ -223,12 +211,7 @@ class EnvironmentStatusFilterForm(forms.ModelForm):
                 css_class="form-group col-md-1 mb-0",
             ),
             Column(
-                HTML(
-                    """
-                <a class="btn btn-outline-danger btn-block btn-sm"
-                href={% url "checks_environmentstatus_list" %}>Reset</a>
-                """
-                ),
+                button_reset("checks_environmentstatus_list"),
                 css_class="form-group col-md-1 mb-0",
             ),
             css_class="form-row",

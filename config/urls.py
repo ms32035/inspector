@@ -16,7 +16,13 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("", include("inspector.checks.urls")),
-    path("", include("inspector.systems.urls")),
+    path(
+        "systems/", include(("inspector.systems.urls", "systems"), namespace="systems")
+    ),
+    path(
+        "profiling/",
+        include(("inspector.profiling.urls", "profiling"), namespace="profiling"),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

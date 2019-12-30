@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load buttons %}
+{% load ui %}
 {% block content %}
   <div class="card">
     <div class="card-body">
@@ -12,15 +13,13 @@
   <table class="table table-borderless table-striped">
     <thead class="border-bottom">
     <tr>
-      <th><p class="text-left"><i class="fas fa-globe-africa" title="Environment"></i></p></th>
-      <th><p class="text-center"><i class="fas fa-list" title="Check code"></i></p></th>
-      <th><p class="text-center"><i class="far fa-square" title="Last start"></i>
-        <i class="fas fa-angle-double-right"></i></p></th>
-      <th><p class="text-center"><i class="fas fa-angle-double-right"></i>
-        <i class="fas fa-square" title="Last end"></i></p></th>
-      <th><p class="text-center"><i class="far fa-clock" title="Status"></i></p></th>
-      <th><p class="text-center"><i class="fas fa-question" title="Result"></i></p></th>
-      <th><p class="text-center"><i class="fas fa-user-cog" title="User"></i></p></th>
+      <th><p class="text-left">{% fa 'environment' %}</p></th>
+      <th><p class="text-center">{% fa 'datacheck' %}</p></th>
+      <th><p class="text-center">{% fa 'start' %}</p></th>
+      <th><p class="text-center">{% fa 'end' %}</p></th>
+      <th><p class="text-center">{% fa 'status' %}</p></th>
+      <th><p class="text-center">{% fa 'result' %}</p></th>
+      <th><p class="text-center">{% fa 'user' %}</p></th>
       <th></th>
     </tr>
     </thead>
@@ -30,32 +29,10 @@
         <td><p class="text-center">{{ object.datacheck.code }}</p></td>
         <td><p class="text-center">{{ object.last_start_time |default_if_none:"" }}</p></td>
         <td><p class="text-center">{{ object.last_end_time |default_if_none:"" }}</p></td>
-        <td><p class="text-center">
-          {% if object.status == 'ERROR' %}
-            <i class="fas fa-exclamation" title="Error" style="color:red"></i>
-          {% elif object.status == 'FINISHED' %}
-            <i class="fas fa-square" title="Finished"></i>
-          {% elif object.status == 'RUNNING' %}
-            <i class="far fa-square" title="Running"></i>
-          {% endif %}
-        </p>
-        </td>
-        <td><p class="text-center">
-          {% if object.result == 'FAILED' %}
-            <i class="fas fa-times" style="color:red"></i>
-          {% elif object.result == 'SUCCESS' %}
-            <i class="fas fa-check" style="color:green"></i>
-          {% elif object.result == 'WARNING' %}
-            <i class="fas fa-exclamation-triangle" style="color:yellow"></i>
-          {% endif %}
-        </p>
-        </td>
-        <td><p class="text-center">
-          {{ object.user.username }}
-        </p>
-        <td>
-          {% button_rerun object %}
-        </td>
+        <td><p class="text-center">{%  fa_status object %}</p></td>
+        <td><p class="text-center">{% fa_result object %}</p></td>
+        <td><p class="text-center">{{ object.user.username }}</p></td>
+        <td>{% button_rerun object %}</td>
       </tr>
     {% endfor %}
   </table>

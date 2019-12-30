@@ -82,13 +82,13 @@ class SystemViewTest(TestCase):
     def test_list_system(self):
         self.test_user.add_permission(System, "view_system")
         create_system()
-        url = reverse("systems_system_list")
+        url = reverse("systems:system_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_system(self):
         self.test_user.add_permission(System, "add_system")
-        url = reverse("systems_system_create")
+        url = reverse("systems:system_create")
         data = {"name": "name", "application": "application"}
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -97,7 +97,7 @@ class SystemViewTest(TestCase):
         self.test_user.add_permission(System, "change_system")
         system = create_system()
         data = {"name": "name", "application": "application"}
-        url = reverse("systems_system_update", args=[system.pk])
+        url = reverse("systems:system_update", args=[system.pk])
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
 
@@ -117,13 +117,13 @@ class EnvironmentViewTest(TestCase):
 
     def test_list_environment(self):
         self.test_user.add_permission(Environment, "view_environment")
-        url = reverse("systems_environment_list")
+        url = reverse("systems:environment_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_environment(self):
         self.test_user.add_permission(Environment, "add_environment")
-        url = reverse("systems_environment_create")
+        url = reverse("systems:environment_create")
         data = {"name": "environment-{}".format(RANDOMS.pop())}
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
@@ -132,7 +132,7 @@ class EnvironmentViewTest(TestCase):
         self.test_user.add_permission(Environment, "change_environment")
         environment = create_environment()
         data = {"name": "environment-{}".format(RANDOMS.pop())}
-        url = reverse("systems_environment_update", args=[environment.pk])
+        url = reverse("systems:environment_update", args=[environment.pk])
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
 
@@ -152,13 +152,13 @@ class InstanceViewTest(TestCase):
 
     def test_list_instance(self):
         self.test_user.add_permission(Instance, "view_instance")
-        url = reverse("systems_instance_list")
+        url = reverse("systems:instance_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_instance(self):
         self.test_user.add_permission(Instance, "add_instance")
-        url = reverse("systems_instance_create")
+        url = reverse("systems:instance_create")
         data = {
             "host": "host",
             "port": 1000,
@@ -175,7 +175,7 @@ class InstanceViewTest(TestCase):
         self.test_user.add_permission(Instance, "view_instance")
         self.system = create_system()
         self.instance = create_instance(system=self.system)
-        url = reverse("systems_instance_detail", args=[self.instance.pk])
+        url = reverse("systems:instance_detail", args=[self.instance.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -191,6 +191,6 @@ class InstanceViewTest(TestCase):
             "system": create_system().pk,
             "environment": create_environment().pk,
         }
-        url = reverse("systems_instance_update", args=[instance.pk])
+        url = reverse("systems:instance_update", args=[instance.pk])
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)

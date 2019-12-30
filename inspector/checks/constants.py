@@ -9,10 +9,6 @@ RELATIONS = Choices(
     (5, "le", "<="),
 )
 
-STATUSES = Choices(
-    ("NEW", "New"), ("RUNNING", "Running"), ("FINISHED", "Finished"), ("ERROR", "Error")
-)
-
 RESULTS = Choices(("SUCCESS", "Success"), ("WARNING", "Warning"), ("FAILED", "Failed"))
 
 CHECK_TYPES = Choices(

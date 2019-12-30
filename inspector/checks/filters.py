@@ -2,16 +2,17 @@ import django_filters
 
 from .forms import CheckRunFilterForm, EnvironmentStatusFilterForm
 from .models import CheckRun, EnvironmentStatus
+from ..base.constants import ICONS
 
 
 class CheckRunFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.filters["environment"].label = ICON_ENVIRONMENT
-        self.filters["datacheck"].label = ICON_DATACHECK
-        self.filters["status"].label = ICON_STATUS
-        self.filters["user"].label = ICON_USER
-        self.filters["result"].label = ICON_RESULT
+        self.filters["environment"].label = ICONS["environment"]
+        self.filters["datacheck"].label = ICONS["datacheck"]
+        self.filters["status"].label = ICONS["status"]
+        self.filters["user"].label = ICONS["user"]
+        self.filters["result"].label = ICONS["result"]
 
     start_time = django_filters.DateTimeFromToRangeFilter()
 
@@ -24,19 +25,12 @@ class CheckRunFilter(django_filters.FilterSet):
 class EnvironmentStatusFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.filters["environment"].label = ICON_ENVIRONMENT
-        self.filters["datacheck"].label = ICON_DATACHECK
-        self.filters["status"].label = ICON_STATUS
-        self.filters["result"].label = ICON_RESULT
+        self.filters["environment"].label = ICONS["environment"]
+        self.filters["datacheck"].label = ICONS["datacheck"]
+        self.filters["status"].label = ICONS["status"]
+        self.filters["result"].label = ICONS["result"]
 
     class Meta:
         model = EnvironmentStatus
         fields = ["environment", "datacheck", "status", "result"]
         form = EnvironmentStatusFilterForm
-
-
-ICON_DATACHECK = '<i class="fas fa-list" title="Check code"></i>'
-ICON_ENVIRONMENT = '<i class="fas fa-globe-africa" title="Environment"></i>'
-ICON_STATUS = '<i class="far fa-clock" title="Status"></i>'
-ICON_RESULT = '<i class="fas fa-question" title="Result"></i>'
-ICON_USER = '<i class="fas fa-user-cog" title="User"></i>'

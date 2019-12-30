@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap_pagination %}
+{% load buttons %}
+{% load modals %}
+{% load ui %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      {% crispy filter.form %}
+    </div>
+  </div>
+
+  <table class="table table-borderless table-striped">
+    <thead>
+    <tr>
+      <th><p class="text-left">{% fa 'system' %}</p></th>
+      <th><p class="text-center">{% fa 'environment' %}</p></th>
+      <th><p class="text-center">{% fa 'schema' %}</p></th>
+      <th><p class="text-center">{% fa 'table' %}</p></th>
+      <th><p class="text-center">{% fa 'start' %}</p></th>
+      <th><p class="text-center">{% fa 'end' %}</p></th>
+      <th><p class="text-center">{% fa 'status' %}</p></th>
+      <th><p class="text-center">Rows</p></th>
+      <th><p class="text-center">{% fa 'report' %}</p></th>
+      <th><p class="text-center">{% fa 'user' %}</p></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+      <tr>
+        <td><p class="text-left">{{ object.dbtable.system.name }}</p></td>
+        <td><p class="text-center">{{ object.dbtable.environment.name }}</p></td>
+        <td><p class="text-center">{{ object.dbtable.schema }}</p></td>
+        <td><p class="text-center">{{ object.dbtable.name }}</p></td>
+        <td><p class="text-center">{{ object.start_time|default_if_none:"" }}</p></td>
+        <td><p class="text-center">{{ object.end_time|default_if_none:"" }}</p></td>
+        <td><p class="text-center">{% fa_status object %}</p></td>
+        <td><p class="text-center">{{ object.rows|default_if_none:"" }}</p></td>
+        <td>{% if object.status == 'FINISHED' %}
+          <p class="text-center">
+            <a href="{% url 'profiling:profile_detail' object.pk %}" target="_blank">
+            <i class="fas fa-file-alt" title="Report"></i>
+            </a>
+          </p>
+            {% endif %}
+        </td>
+        <td><p class="text-center">{{ object.user.username }}</p></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% bootstrap_paginate page_obj range=10 %}
+
+{% endblock %}

@@ -58,7 +58,6 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 'django.contrib.humanize', # Handy template tags
     "django.contrib.admin",
 ]
 THIRD_PARTY_APPS = [
@@ -82,7 +81,8 @@ LOCAL_APPS = [
     "inspector.base.apps.BaseConfig",
     "inspector.users.apps.UsersAppConfig",
     "inspector.checks.apps.ChecksConfig",
-    "inspector.systems.apps.SystemsConfig"
+    "inspector.systems.apps.SystemsConfig",
+    "inspector.profiling.apps.ProfilingConfig"
     # Your stuff: custom apps go here
 ]
 
@@ -106,7 +106,7 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "checks_environmentstatus_list"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
@@ -302,10 +302,34 @@ CODEMIRROR_SETTINGS["inspector"] = {
 
 BOOTSTRAP4 = {
     "css_url": {
-        "href": "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css",
-        "integrity": "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T",
+        "href": "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
+        "integrity": "sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh",
         "crossorigin": "anonymous",
-    }
+    },
+    "javascript_url": {
+        "url": "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js",
+        "integrity": "sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6",
+        "crossorigin": "anonymous",
+    },
+    "popper_url": {
+        "url": "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js",
+        "integrity": "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo",
+        "crossorigin": "anonymous",
+    },
+    "jquery_url": {
+        "url": "https://code.jquery.com/jquery-3.4.1.min.js",
+        "integrity": "sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh",
+        "crossorigin": "anonymous",
+    },
 }
 
 TAGGIT_CASE_INSENSITIVE = True
+
+# Profiling storage
+
+DEFAULT_FILE_STORAGE = env.str(
+    "DJANGO_DEFAULT_FILE_STORAGE", "django.core.files.storage.FileSystemStorage"
+)
+PROFILING_REPORTS_PATH = env.str("DJANGO_PROFILING_REPORTS_PATH", "profiling_reports")
+AWS_STORAGE_BUCKET_NAME = env.str("DJANGO_AWS_STORAGE_BUCKET_NAME", None)
+AWS_DEFAULT_ACL = None

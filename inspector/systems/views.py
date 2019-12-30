@@ -1,5 +1,6 @@
 from bootstrap_modal_forms.mixins import DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     DetailView,
@@ -7,10 +8,14 @@ from django.views.generic import (
     UpdateView,
     CreateView,
     DeleteView,
+    RedirectView,
 )
+from django_filters.views import BaseFilterView
 
+from .filters import DbTableFilter
 from .forms import SystemForm, EnvironmentForm, InstanceForm
-from .models import System, Environment, Instance
+from .models import System, Environment, Instance, DbTable
+from ..taskapp.tasks import reflect_instance
 
 
 class SystemListView(PermissionRequiredMixin, ListView):
@@ -24,7 +29,7 @@ class SystemCreateView(PermissionRequiredMixin, CreateView):
     form_class = SystemForm
 
     def get_success_url(self):
-        return reverse("systems_system_list")
+        return reverse("systems:system_list")
 
 
 class SystemUpdateView(PermissionRequiredMixin, UpdateView):
@@ -33,7 +38,7 @@ class SystemUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = SystemForm
 
     def get_success_url(self):
-        return reverse("systems_system_list")
+        return reverse("systems:system_list")
 
 
 class EnvironmentListView(PermissionRequiredMixin, ListView):
@@ -47,7 +52,7 @@ class EnvironmentCreateView(PermissionRequiredMixin, CreateView):
     form_class = EnvironmentForm
 
     def get_success_url(self):
-        return reverse("systems_environment_list")
+        return reverse("systems:environment_list")
 
 
 class EnvironmentUpdateView(PermissionRequiredMixin, UpdateView):
@@ -56,7 +61,7 @@ class EnvironmentUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = EnvironmentForm
 
     def get_success_url(self):
-        return reverse("systems_environment_list")
+        return reverse("systems:environment_list")
 
 
 class InstanceListView(PermissionRequiredMixin, ListView):
@@ -73,7 +78,7 @@ class InstanceCreateView(PermissionRequiredMixin, CreateView):
     form_class = InstanceForm
 
     def get_success_url(self):
-        return reverse("systems_instance_list")
+        return reverse("systems:instance_list")
 
 
 class InstanceDetailView(PermissionRequiredMixin, DetailView):
@@ -88,7 +93,7 @@ class InstanceUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = InstanceForm
 
     def get_success_url(self):
-        return reverse("systems_instance_list")
+        return reverse("systems:instance_list")
 
 
 class SystemDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
@@ -96,7 +101,7 @@ class SystemDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
     model = System
     template_name = "components/modals_delete.html"
     success_message = "Success: System was deleted."
-    success_url = reverse_lazy("systems_system_list")
+    success_url = reverse_lazy("systems:system_list")
 
 
 class EnvironmentDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
@@ -104,7 +109,7 @@ class EnvironmentDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteV
     model = Environment
     template_name = "components/modals_delete.html"
     success_message = "Success: Environment was deleted."
-    success_url = reverse_lazy("systems_environment_list")
+    success_url = reverse_lazy("systems:environment_list")
 
 
 class InstanceDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
@@ -112,4 +117,29 @@ class InstanceDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView
     model = Instance
     template_name = "components/modals_delete.html"
     success_message = "Success: Instance was deleted."
-    success_url = reverse_lazy("systems_instance_list")
+    success_url = reverse_lazy("systems:instance_list")
+
+
+class DbTableListView(PermissionRequiredMixin, BaseFilterView, ListView):
+    permission_required = "systems.view_dbtable"
+    paginate_by = 50
+    filterset_class = DbTableFilter
+
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get("paginate_by", self.paginate_by)
+
+    def get_queryset(self):
+        qs = DbTable.objects.select_related()
+        qs_filtered_list = DbTableFilter(self.request.GET, queryset=qs)
+
+        return qs_filtered_list.qs
+
+
+class InstanceReflectView(PermissionRequiredMixin, RedirectView, SuccessMessageMixin):
+    permission_required = "systems.add_dbtable"
+    success_message = "Success: Reflection job started."
+    success_url = reverse_lazy("systems:table_list")
+
+    def get_redirect_url(self, *args, **kwargs):
+        reflect_instance.delay(kwargs["pk"])
+        return self.success_url

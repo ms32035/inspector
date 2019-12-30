@@ -1,13 +1,15 @@
 import logging
 from datetime import datetime as dt
 from importlib import import_module
+from typing import Optional
+from pytz import utc
 
-import pytz
 
 from .exceptions import CheckExecutorException, InstanceNotFound
 from .executors import CheckExecutor, CONFIG
 from .executors.python_executor import PythonExecutor
-from ..constants import STATUSES, RELATIONS, RESULTS
+from ..constants import RELATIONS, RESULTS
+from ...base.constants import STATUSES
 from ..models import CheckRun, Datacheck, EnvironmentStatus
 from ...systems.models import Instance, System
 
@@ -18,8 +20,8 @@ class CheckProcessor:
     def __init__(self, checkrun_id: int):
         self.checkrun: CheckRun = CheckRun.objects.get(id=checkrun_id)
         self.datacheck: Datacheck = self.checkrun.datacheck
-        self.left_executor: CheckExecutor = None
-        self.right_executor: CheckExecutor = None
+        self.left_executor: Optional[CheckExecutor] = None
+        self.right_executor: Optional[CheckExecutor] = None
 
     def prepare_check(self) -> bool:
 
@@ -46,7 +48,7 @@ class CheckProcessor:
         else:
             logger.info("Starting check -  %s", self.datacheck.code)
             self.checkrun.status = STATUSES.RUNNING
-            self.checkrun.start_time = dt.now(pytz.utc)
+            self.checkrun.start_time = dt.now(utc)
             status = True
 
         self.checkrun.save()
@@ -62,6 +64,7 @@ class CheckProcessor:
             instance=instance, check_type=check_type
         )
         try:
+            executor.get_engine()
             executor.test_connection()
         except Exception as exc:
             raise CheckExecutorException(exc)
@@ -83,12 +86,10 @@ class CheckProcessor:
 
         config = CONFIG[instance.system.application]
         executor_module = import_module(
-            f'inspector.checks.engine.executors.{config["executor.module"]}'
+            f'inspector.checks.engine.executors.{config["module"]}'
         )
-        executor_class = getattr(executor_module, config["executor.class"])
-        return executor_class(
-            instance=instance, check_type=check_type, **config["params"]
-        )
+        executor_class = getattr(executor_module, config["class"])
+        return executor_class(instance=instance, check_type=check_type,)
 
     def execute_checks(self):
 
@@ -128,7 +129,7 @@ class CheckProcessor:
                     errors.append(str(exc))
                     status = False
 
-        end_time = dt.now(pytz.utc)
+        end_time = dt.now(utc)
 
         if status:
             self.checkrun.status = STATUSES.FINISHED

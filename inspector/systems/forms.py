@@ -2,8 +2,10 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 from django import forms
 
-from .models import Environment, Instance, System
+from .models import Environment, Instance, System, DbTable
+from ..base.components import button_reset
 from ..base.constants import SUBMIT_CSS_CLASSES
+from ..base.forms import prepended_select_column
 
 
 class SystemForm(forms.ModelForm):
@@ -71,3 +73,28 @@ class InstanceForm(forms.ModelForm):
         ),
         Submit("submit", "Submit", css_class="btn-sm"),
     )
+
+
+class DbTableFilterForm(forms.ModelForm):
+
+    helper = FormHelper()
+    helper.form_method = "GET"
+    helper.layout = Layout(
+        Row(
+            prepended_select_column("system", 4, "mb-1"),
+            prepended_select_column("environment", 4, "mb-1"),
+            prepended_select_column("schema", 2, "mb-1"),
+            Column(
+                Submit("submit", "Search", css_class=SUBMIT_CSS_CLASSES),
+                css_class="form-group col-md-1 mb-1",
+            ),
+            Column(
+                button_reset("checks_checkrun_list"),
+                css_class="form-group col-md-1 mb-1",
+            ),
+        )
+    )
+
+    class Meta:
+        model = DbTable
+        fields = ["system", "environment", "schema"]

@@ -18,7 +18,9 @@ class CheckRunService:
     def run_check_tag(tag: Tag, environment: str, user: User):
         environment = Environment.objects.get(name=environment)
 
-        for chk in Datacheck.objects.filter(tags__name__in=[tag.name]):
+        for chk in Datacheck.objects.filter(tags__name__in=[tag.name]).order_by(
+            "-weight"
+        ):
             CheckRunService.create_and_execute_checkrun(chk, environment, user)
 
     @staticmethod

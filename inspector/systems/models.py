@@ -3,6 +3,7 @@ from django.urls import reverse
 from encrypted_model_fields.fields import EncryptedCharField
 
 from .constants import APPLICATIONS
+from ..base.models import SoftDeletionModel
 
 
 class System(models.Model):
@@ -19,7 +20,7 @@ class System(models.Model):
         return "%s" % self.pk
 
     def get_url(self, action):
-        return reverse(f"systems_system_{action}", args=(self.pk,))
+        return reverse(f"systems:system_{action}", args=(self.pk,))
 
     def get_name(self):
         return self.name
@@ -38,7 +39,7 @@ class Environment(models.Model):
         return "%s" % self.pk
 
     def get_url(self, action):
-        return reverse(f"systems_environment_{action}", args=(self.pk,))
+        return reverse(f"systems:environment_{action}", args=(self.pk,))
 
     def get_name(self):
         return self.name
@@ -63,10 +64,34 @@ class Instance(models.Model):
         return "%s" % self.pk
 
     def get_url(self, action):
-        return reverse(f"systems_instance_{action}", args=(self.pk,))
+        return reverse(f"systems:instance_{action}", args=(self.pk,))
 
     def get_absolute_url(self):
         self.get_url("update")
 
     def get_name(self):
-        return f"{self.system.name} / {self.environment.name} "
+        return f"{self.system.name} / {self.environment.name}"
+
+
+class DbTable(SoftDeletionModel):
+    system = models.ForeignKey(System, on_delete=models.PROTECT)
+    environment = models.ForeignKey(Environment, on_delete=models.PROTECT)
+    fullname = models.CharField(max_length=255)
+    schema = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    last_profiling_at = models.DateTimeField(null=True)
+    rows = models.IntegerField(null=True)
+
+    unique_together = ((system, environment, fullname),)
+
+    class Meta:
+        ordering = ("system", "environment", "fullname")
+
+    def get_name(self):
+        return self.fullname
+
+    def get_url(self, action, app="systems"):
+        return reverse(f"{app}:table_{action}", args=(self.pk,))
+
+    def __str__(self):
+        return self.fullname

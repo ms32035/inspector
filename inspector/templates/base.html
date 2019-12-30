@@ -25,8 +25,6 @@
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 
-
-
     <!-- Your stuff: Third-party CSS libraries go here -->
     {% compress css %}
       <!-- This file stores project-specific CSS -->
@@ -62,11 +60,6 @@
               <a class="nav-link" href="{% url 'checks_environmentstatus_list' %}">Status</a>
             </li>
           {% endif %}
-          {% if perms.checks.view_checkrun %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'checks_checkrun_list' %}">Check runs</a>
-            </li>
-          {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownChecks" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
@@ -75,6 +68,9 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdownChecks">
               {% if perms.checks.view_datacheck %}
                 <a class="dropdown-item" href="{% url 'checks_datacheck_list' %}">Checks</a>
+              {% endif %}
+              {% if perms.checks.view_checkrun %}
+                  <a class="dropdown-item" href="{% url 'checks_checkrun_list' %}">Check runs</a>
               {% endif %}
             </div>
           </li>
@@ -85,13 +81,27 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSystems">
               {% if perms.systems.view_system %}
-                <a class="dropdown-item" href="{% url 'systems_system_list' %}">Systems</a>
+                <a class="dropdown-item" href="{% url 'systems:system_list' %}">Systems</a>
               {% endif %}
               {% if perms.systems.view_environment %}
-                <a class="dropdown-item" href="{% url 'systems_environment_list' %}">Environments</a>
+                <a class="dropdown-item" href="{% url 'systems:environment_list' %}">Environments</a>
               {% endif %}
               {% if perms.systems.view_instance %}
-                <a class="dropdown-item" href="{% url 'systems_instance_list' %}">Instances</a>
+                <a class="dropdown-item" href="{% url 'systems:instance_list' %}">Instances</a>
+              {% endif %}
+              {% if perms.systems.view_dbtable %}
+                <a class="dropdown-item" href="{% url 'systems:table_list' %}">Tables</a>
+              {% endif %}
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSystems" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+              Profiling
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownSystems">
+              {% if perms.profiling.view_profile %}
+                <a class="dropdown-item" href="{% url 'profiling:profile_list' %}">Profiles</a>
               {% endif %}
             </div>
           </li>
@@ -123,11 +133,7 @@
 
 <div class="container">
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
+  {% bootstrap_messages %}
 
   {% block content %}
     <p>Use this document as a way to quick start any new project.</p>
@@ -143,14 +149,10 @@
 <!-- Placed at the end of the document so the pages load faster -->
 {% block javascript %}
 
-    {% bootstrap_javascript jquery='full' %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-          integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-          crossorigin="anonymous"></script>
-
+    {% bootstrap_javascript jquery=True %}
 
   <!-- Your stuff: Third-party javascript libraries go here -->
-  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+  <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
   <!-- place project specific Javascript in this file -->
