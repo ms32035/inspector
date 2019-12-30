@@ -50,11 +50,10 @@ class ProfilerService(metaclass=ABCMeta):
 
     def save_report(self):
         if self.status:
-            report_file = open(self.report_file_path)
-            self.profile.result.save(
-                name=self.report_file_name, content=File(report_file)
-            )
-            report_file.close()
+            with open(self.report_file_path, "rb") as report_file:
+                self.profile.result.save(
+                    name=self.report_file_name, content=File(report_file)
+                )
 
     def save_profile(self):
         if self.status:
