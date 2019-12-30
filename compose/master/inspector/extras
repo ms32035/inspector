@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -n "${EXTRA_PACKAGES}" ]; then
   apk add ${EXTRA_PACKAGES}
