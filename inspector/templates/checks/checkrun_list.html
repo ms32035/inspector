@@ -15,13 +15,13 @@
   <table class="table table-borderless table-striped">
     <thead class="border-bottom">
     <tr>
-      <th><p class="text-left">{% fa 'datacheck' %}</p></th>
-      <th><p class="text-center">{% fa 'environment' %}</p></th>
-      <th><p class="text-center">{% fa 'start' %}</p></th>
-      <th><p class="text-center">{% fa 'end' %}</p></th>
-      <th><p class="text-center">{% fa 'status' %}</p></th>
-      <th><p class="text-center">{% fa 'result' %}</p></th>
-      <th><p class="text-center">{% fa 'user' %}</p></th>
+      <th>{% fa_l 'datacheck' %}</th>
+      <th>{% fa_c 'environment' %}</th>
+      <th>{% fa_c 'start' %}</th>
+      <th>{% fa_c 'end' %}</th>
+      <th>{% fa_c 'status' %}</th>
+      <th>{% fa_c 'result' %}</th>
+      <th>{% fa_c 'user' %}</th>
       <th></th>
     </tr>
     </thead>
@@ -29,12 +29,12 @@
     {% for object in object_list %}
       <tr>
         <td>{{ object.datacheck.code }}</td>
-        <td><p class="text-center">{{ object.environment.name }}</p></td>
+        <td>{{ object.environment.name|p_c }}</td>
         <td><p class="text-center">{{ object.start_time|default_if_none:"" }}</p></td>
         <td><p class="text-center">{{ object.end_time|default_if_none:"" }}</p></td>
         <td><p class="text-center">{% fa_status object %}</p></td>
         <td><p class="text-center">{% fa_result object %}</p></td>
-        <td><p class="text-center">{{ object.user.username }}</p></td>
+        <td>{{ object.user.username|p_c }}</td>
         <td>
           <p class="text-right">
             {% button_hoverdetail 'checks/checkrun_hoverdetail' object %}

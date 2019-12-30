@@ -14,38 +14,24 @@
   <table class="table table-borderless table-striped">
     <thead>
     <tr>
-      <th><p class="text-left">{% fa 'system' %}</p></th>
-      <th><p class="text-center">{% fa 'environment' %}</p></th>
-      <th><p class="text-center">{% fa 'schema' %}</p></th>
-      <th><p class="text-center">{% fa 'table' %}</p></th>
-      <th><p class="text-center">Rows</p></th>
-      <th><p class="text-center">{% fa 'last_run' %}</p></th>
+      <th>{% fa_l 'system' %}</th>
+      <th>{% fa_c 'environment' %}</th>
+      <th>{% fa_c 'schema' %}</th>
+      <th>{% fa_c 'table' %}</th>
+      <th>{% fa_c 'rows' %}</th>
+      <th>{% fa_c 'last_run' %}</th>
       <th></th>
     </tr>
     </thead>
     <tbody>
     {% for object in object_list %}
       <tr>
-        <td>
-          <p class="text-left">
-            {{ object.system.name }}
-          </p>
-        </td>
-        <td><p class="text-center">
-          {{ object.environment.name }}
-        </p></td>
-        <td><p class="text-center">
-          {{ object.schema }}
-        </p></td>
-        <td><p class="text-center">
-          {{ object.name }}
-        </p></td>
-        <td><p class="text-center">
-          {{ object.rows|default_if_none:"" }}
-        </p></td>
-        <td><p class="text-center">
-          {{ object.last_profiling_at|default_if_none:"" }}
-        </p></td>
+        <td>{{ object.system.name|p_l }}</td>
+        <td>{{ object.environment.name|p_c }}</td>
+        <td>{{ object.schema|p_c }}</td>
+        <td>{{ object.name|p_c }}</td>
+        <td>{{ object.rows|default_if_none:""|p_c }}</td>
+        <td>{{ object.last_profiling_at|default_if_none:""|p_c }}</td>
         <td>
           <p class="text-right">
             <a href="{% url 'profiling:profile_list' %}?dbtable={{ object.id }}" title="Runs">

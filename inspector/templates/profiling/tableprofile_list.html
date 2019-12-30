@@ -16,38 +16,38 @@
   <table class="table table-borderless table-striped">
     <thead>
     <tr>
-      <th><p class="text-left">{% fa 'system' %}</p></th>
-      <th><p class="text-center">{% fa 'environment' %}</p></th>
-      <th><p class="text-center">{% fa 'schema' %}</p></th>
-      <th><p class="text-center">{% fa 'table' %}</p></th>
-      <th><p class="text-center">{% fa 'start' %}</p></th>
-      <th><p class="text-center">{% fa 'end' %}</p></th>
-      <th><p class="text-center">{% fa 'status' %}</p></th>
-      <th><p class="text-center">Rows</p></th>
-      <th><p class="text-center">{% fa 'report' %}</p></th>
-      <th><p class="text-center">{% fa 'user' %}</p></th>
+      <th>{% fa_l 'system' %}</th>
+      <th>{% fa_c 'environment' %}</th>
+      <th>{% fa_c 'schema' %}</th>
+      <th>{% fa_c 'table' %}</th>
+      <th>{% fa_c 'start' %}</th>
+      <th>{% fa_c 'end' %}</th>
+      <th>{% fa_c 'status' %}</th>
+      <th>{% fa_c 'rows' %}</th>
+      <th>{% fa_c 'report' %}</th>
+      <th>{% fa_c 'user' %}</th>
     </tr>
     </thead>
     <tbody>
     {% for object in object_list %}
       <tr>
-        <td><p class="text-left">{{ object.dbtable.system.name }}</p></td>
-        <td><p class="text-center">{{ object.dbtable.environment.name }}</p></td>
-        <td><p class="text-center">{{ object.dbtable.schema }}</p></td>
-        <td><p class="text-center">{{ object.dbtable.name }}</p></td>
+        <td>{{ object.dbtable.system.name|p_l }}</td>
+        <td>{{ object.dbtable.environment.name|p_c }}</td>
+        <td>{{ object.dbtable.schema|p_c }}</td>
+        <td>{{ object.dbtable.name|p_c }}</td>
         <td><p class="text-center">{{ object.start_time|default_if_none:"" }}</p></td>
         <td><p class="text-center">{{ object.end_time|default_if_none:"" }}</p></td>
         <td><p class="text-center">{% fa_status object %}</p></td>
-        <td><p class="text-center">{{ object.rows|default_if_none:"" }}</p></td>
+        <td>{{ object.rows|default_if_none:""|p_c }}</td>
         <td>{% if object.status == 'FINISHED' %}
           <p class="text-center">
             <a href="{% url 'profiling:profile_detail' object.pk %}" target="_blank">
-            <i class="fas fa-file-alt" title="Report"></i>
+              <i class="fas fa-file-alt" title="Report"></i>
             </a>
           </p>
-            {% endif %}
+        {% endif %}
         </td>
-        <td><p class="text-center">{{ object.user.username }}</p></td>
+        <td>{{ object.user.username|p_c }}</td>
       </tr>
     {% endfor %}
     </tbody>

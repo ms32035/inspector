@@ -7,9 +7,9 @@
   <table class="table table-borderless table-striped">
     <thead>
     <tr>
-      <th><p class="text-left">{% fa 'system' %}</p></th>
-      <th><p class="text-center">{% fa 'environment' %}</p></th>
-      <th><p class="text-center">{% fa 'host' %}</p></th>
+      <th>{% fa_l 'system' %}</th>
+      <th>{% fa_c 'environment' %}</th>
+      <th>{% fa_c 'host' %}</th>
       <th>
         {% if perms.systems.add_instance %}
           <p class="text-right">
@@ -22,8 +22,8 @@
     {% for object in object_list %}
       <tr>
         <td>{{ object.system }}</td>
-        <td><p class="text-center">{{ object.environment }}</p></td>
-        <td><p class="text-center">{{ object.host }}</p></td>
+        <td>{{ object.environment|p_c }}</td>
+        <td>{{ object.host|default_if_none:""|p_c }}</td>
         <td>
           <p class="text-right">
             <a href="{% url 'systems:instance_reflect' object.pk %}" title="Rerun">

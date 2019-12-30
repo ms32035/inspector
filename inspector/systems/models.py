@@ -73,6 +73,11 @@ class Instance(models.Model):
         return f"{self.system.name} / {self.environment.name}"
 
 
+class DbTableManager(models.Manager):
+    def get_queryset(self):
+        return super(DbTableManager, self).get_queryset().select_related()
+
+
 class DbTable(SoftDeletionModel):
     system = models.ForeignKey(System, on_delete=models.PROTECT)
     environment = models.ForeignKey(Environment, on_delete=models.PROTECT)
@@ -83,6 +88,7 @@ class DbTable(SoftDeletionModel):
     rows = models.IntegerField(null=True)
 
     unique_together = ((system, environment, fullname),)
+    objects = DbTableManager()
 
     class Meta:
         ordering = ("system", "environment", "fullname")
@@ -94,4 +100,4 @@ class DbTable(SoftDeletionModel):
         return reverse(f"{app}:table_{action}", args=(self.pk,))
 
     def __str__(self):
-        return self.fullname
+        return f"{self.fullname} - {self.system.name} / {self.environment.name}"

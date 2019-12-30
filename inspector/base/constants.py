@@ -20,6 +20,8 @@ ICONS = {
     "application": '<i class="far fa-window-maximize" title="Application"></i>',
     "last_run": '<i class="far fa-clock" title="Last run"></i>',
     "tags": '<i class="fas fa-tags" title="Tags"></i>',
+    "weight": '<i class="fas fa-balance-scale" title="Weight">',
+    "rows": '<i class="fas fa-sort-numeric-down"></i>',
 }
 
 STATUS_ICONS = {
