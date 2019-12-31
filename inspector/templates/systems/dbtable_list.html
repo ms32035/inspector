@@ -31,14 +31,16 @@
         <td>{{ object.schema|p_c }}</td>
         <td>{{ object.name|p_c }}</td>
         <td>{{ object.rows|default_if_none:""|p_c }}</td>
-        <td>{{ object.last_profiling_at|default_if_none:""|p_c }}</td>
+        <td><p class="text-center">{{ object.last_profiling_at|default_if_none:"" }}</p></td>
         <td>
           <p class="text-right">
-            <a href="{% url 'profiling:profile_list' %}?dbtable={{ object.id }}" title="Runs">
-              <button class="btn btn-outline-secondary btn-sm btn-table">
-                <span class="far fa-clock fa-sm"></span>
-              </button>
-            </a>
+            {% if object.last_profiling_at %}
+              <a href="{% url 'profiling:profile_list' %}?dbtable={{ object.id }}" title="Runs">
+                <button class="btn btn-outline-secondary btn-sm btn-table">
+                  <span class="far fa-clock fa-sm"></span>
+                </button>
+              </a>
+            {% endif %}
             {% button_profile object %}
           </p>
         </td>

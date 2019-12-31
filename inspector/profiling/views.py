@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.messages import success
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -12,7 +12,7 @@ from ..systems.models import DbTable
 from ..taskapp.tasks import profile_table
 
 
-class TableProfileCreateView(PermissionRequiredMixin, View, SuccessMessageMixin):
+class TableProfileCreateView(PermissionRequiredMixin, View):
     permission_required = "profiling.add_tableprofile"
     success_message = "Success: Profiling job was triggered."
     success_url = reverse_lazy("profiling:profile_list")
@@ -23,6 +23,7 @@ class TableProfileCreateView(PermissionRequiredMixin, View, SuccessMessageMixin)
         )
         profile.save()
         profile_table.delay(profile.id, "pandas")
+        success(request, message=self.success_message)
         return redirect(self.success_url)
 
 
