@@ -12,6 +12,7 @@ Contents:
    admin
    systems
    checks
+   profiling
    api
    development
    future

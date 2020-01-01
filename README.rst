@@ -74,6 +74,17 @@ User interface
 
 .. image:: docs/_static/check_run_history.png
 
+* **Table list**
+
+.. image:: docs/_static/table_list.png
+
+* **Profiling history**
+
+.. image:: docs/_static/profiling_history.png
+
+* **Profiling report (Pandas Profiling)**
+
+.. image:: docs/_static/profiling_report.png
 
 Contributing
 --------------
