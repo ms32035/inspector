@@ -26,7 +26,7 @@
         <td>{{ object.host|default_if_none:""|p_c }}</td>
         <td>
           <p class="text-right">
-            <a href="{% url 'systems:instance_reflect' object.pk %}" title="Rerun">
+            <a href="{% url 'systems:instance_reflect' object.pk %}" title="Reflect">
               <button class="btn btn-outline-secondary btn-sm btn-table">
                 <span class="fas fa-table fa-sm"></span>
               </button>

@@ -12,7 +12,7 @@ CONNECTION_STRINGS = {
 
 class SQLConnector(Connector):
     def get_engine(self) -> None:
-        connection_string = CONNECTION_STRINGS[self.instance.system]
+        connection_string = CONNECTION_STRINGS[self.instance.system.id]
         self.engine = create_engine(
             connection_string.format(
                 login=self.instance.login,
