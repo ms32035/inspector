@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from encrypted_model_fields.fields import EncryptedCharField
+from django.contrib.postgres.fields import JSONField
 
 from .constants import APPLICATIONS
 from ..base.models import SoftDeletionModel
@@ -54,7 +55,7 @@ class Instance(models.Model):
     schema = models.CharField(max_length=100, null=True, blank=True)
     login = models.CharField(max_length=100, null=True, blank=True)
     password = EncryptedCharField(max_length=100, null=True, blank=True)
-    extra_json = models.TextField(null=True, blank=True)
+    extra_json = JSONField(null=True, blank=True)
     unique_together = ((system, environment),)
 
     class Meta:
@@ -87,10 +88,10 @@ class DbTable(SoftDeletionModel):
     last_profiling_at = models.DateTimeField(null=True)
     rows = models.IntegerField(null=True)
 
-    unique_together = ((system, environment, fullname),)
     objects = DbTableManager()
 
     class Meta:
+        unique_together = (("system", "environment", "fullname"),)
         ordering = ("system", "environment", "fullname")
 
     def get_name(self):

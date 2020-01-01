@@ -37,13 +37,15 @@ class InstanceForm(forms.ModelForm):
             "db",
             "schema",
             "login",
-            "password",
             "extra_json",
         ]
         widgets = {
-            "password": forms.PasswordInput(),
             "extra_json": forms.Textarea({"cols": 40, "rows": 3}),
         }
+
+    new_password = forms.CharField(
+        required=False, widget=forms.widgets.PasswordInput, label="Password"
+    )
 
     helper = FormHelper()
     helper.layout = Layout(
@@ -64,7 +66,7 @@ class InstanceForm(forms.ModelForm):
         ),
         Row(
             Column("login", css_class="form-group col-md-6 mb-0"),
-            Column("password", css_class="form-group col-md-6 mb-0"),
+            Column("new_password", css_class="form-group col-md-6 mb-0"),
             css_class="form-row",
         ),
         Row(
@@ -76,7 +78,6 @@ class InstanceForm(forms.ModelForm):
 
 
 class DbTableFilterForm(forms.ModelForm):
-
     helper = FormHelper()
     helper.form_method = "GET"
     helper.layout = Layout(

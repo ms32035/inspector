@@ -20,7 +20,9 @@ class MetadataService:
             for tab in schema_tabs:
                 tables[f"{schema}.{tab}"] = (schema, tab)
 
-        db_tables = DbTable.objects.filter(system=self.instance.system)
+        db_tables = DbTable.objects.filter(
+            system=self.instance.system, environment=self.instance.environment
+        )
 
         create_list = []
 
