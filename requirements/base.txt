@@ -42,4 +42,3 @@ pandas==0.25.3
 pandas-profiling==2.3.0
 notebook==6.0.2
 ipywidgets==7.5.1
-# TO-DO make optional in setup.py

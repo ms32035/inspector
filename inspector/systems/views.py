@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages import success
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.debug import sensitive_variables
 from django.views.generic import (
     DetailView,
     ListView,
@@ -92,6 +93,14 @@ class InstanceUpdateView(PermissionRequiredMixin, UpdateView):
 
     model = Instance
     form_class = InstanceForm
+
+    @sensitive_variables("new_password")
+    def form_valid(self, form):
+        clean = form.cleaned_data
+        new_password = clean.get("new_password")
+        if new_password:
+            form.instance.password = new_password
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("systems:instance_list")
