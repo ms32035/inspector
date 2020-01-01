@@ -8,10 +8,9 @@ when the primary condition is not met. Warning value was designed
 to be used for 'known issues', where a certain degree of discrepancy
 is acceptable.
 
-Check groups
-------------
+Tagging
+-------
 
-Currently a check can belong to a maximum of 1 group,
-and a whole group can be executed at once.
-In the future, there might be a more flexible solution,
-such as tags, but this is not a priority for now
+:code:`django-taggit` is uses to assign tags to checks. This next allows
+to execute all checks with the same tag at once. If you want to run all check,
+assign a shared tag i.e. :code:`all` to all checks

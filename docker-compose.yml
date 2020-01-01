@@ -6,29 +6,43 @@ services:
     build:
       context: .
       dockerfile: compose/master/inspector/Dockerfile
-    image: ${DOCKER_REPO}:master
+    image: ms32035/inpector:master
     env_file:
-      - .envs/.inspector/.django
-      - .envs/.inspector/.postgres
+      - .envs/django
+      - .envs/postgres
     ports:
       - "5000:5000"
     command: /start
 
   celeryworker:
     <<: *inspector
-    image: ${DOCKER_REPO}:master
+    image: ms32035/inpector:master
     ports: []
     command: /start-celeryworker
 
   celerybeat:
     <<: *inspector
-    image: ${DOCKER_REPO}:master
+    image: ms32035/inpector:master
     ports: []
     command: /start-celerybeat
 
   flower:
     <<: *inspector
-    image: ${DOCKER_REPO}:master
+    image: ms32035/inpector:master
     ports:
       - "5555:5555"
     command: /start-flower
+
+  postgres:
+    image: postgres:12
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .envs/postgres
+
+  redis:
+    image: redis:5
+
+
+volumes:
+  pgdata: {}

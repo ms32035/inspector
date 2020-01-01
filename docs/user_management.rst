@@ -1,10 +1,6 @@
 User management
 ===============
 
-The security part is quite incomplete at the moment,
-and the main benefit of user registration is that check execution
-history is stored with the name of the user triggering the check.
-
 Users and authentication
 ------------------------
 
@@ -26,10 +22,16 @@ Default groups
 --------------
 
 There are some default groups that you might want to use
-(https://github.com/yoyowallet/inspector/blob/master/inspector/base/management/commands/default_auth_groups.py)
+(https://github.com/ms32035/inspector/blob/master/inspector/base/management/commands/default_auth_groups.py)
 
 To enable these, run the following command:
 
 .. code-block:: bash
 
     python manage.py default_auth_groups
+
+
+Assigning permissions
+--------------
+
+Assign users to groups in Django Admin

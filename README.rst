@@ -15,29 +15,49 @@ Inspector was built to help with:
 * managing and execution of check queries when testing ETL processes
 * periodic data integrity verification in production environments
 * confirming that testing has actually been done ;)
+* data profiling
 
 Documentation
 -------------
 
-https://yoyo-inspector.readthedocs.io/
+https://data-inspector.readthedocs.io/
 
 Using docker images
 -------------------
 
-Set the image name, for example:
-```
-export DOCKER_REPO=ms32035/inspector
-```
-
-Local development, only Postgres and redis in Docker
+Local development, only Postgres and Redis in Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-```
-source .envs/.local/.env
-docker-compose -f docker-compose-db.yml up -d
-./manage.py runserver
-```
+.. code-block:: bash
 
+    source .envs/local.env
+    docker-compose -f docker-compose-db.yml up -d
+    ./manage.py runserver
+
+Docker development
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    docker-compose -f docker-compose-develop.yml up -d
+
+Access Inspector at :code:`http://localhost:8000`
+
+
+Docker-compose - production image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simply
+
+.. code-block:: bash
+
+    docker-compose up -d
+
+and Inspector will be available at :code:`http://localhost:5000`
+
+Obviously, you might want to customize parameters,
+so check out the files in :code:`.envs/example` and prepare your own
+:code:`docker-compose.yml` with HTTPS reverse proxy in front
 
 User interface
 --------------
@@ -54,6 +74,17 @@ User interface
 
 .. image:: docs/_static/check_run_history.png
 
+* **Table list**
+
+.. image:: docs/_static/table_list.png
+
+* **Profiling history**
+
+.. image:: docs/_static/profiling_history.png
+
+* **Profiling report (Pandas Profiling)**
+
+.. image:: docs/_static/profiling_report.png
 
 Contributing
 --------------

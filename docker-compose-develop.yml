@@ -5,14 +5,14 @@ services:
     build:
       context: .
       dockerfile: compose/develop/inspector/Dockerfile
-    image: ${DOCKER_REPO}:develop
+    image: ms32035/inpector:develop
     depends_on:
       - postgres
     volumes:
       - .:/app
     env_file:
-      - .envs/.develop/.django
-      - .envs/.develop/.postgres
+      - .envs/django-develop
+      - .envs/postgres
     ports:
       - "8000:8000"
     command: /start
@@ -22,7 +22,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
-      - .envs/.develop/.postgres
+      - .envs/postgres
 
   redis:
     image: redis:5

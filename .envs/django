@@ -1,0 +1,28 @@
+DJANGO_SETTINGS_MODULE=config.settings.production
+
+DATABASE_URL=postgres://inspector:inspector@postgres:5432/inspector
+CELERY_BROKER_URL=redis://redis:6379/0
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=inspector
+CELERY_FLOWER_PASSWORD=inspector
+
+USE_DOCKER=yes
+
+DJANGO_ADMIN_URL=admin
+DJANGO_COLLECTFAST_STRATEGY=collectfast.strategies.filesystem.FileSystemStrategy
+
+# HTTPS proxy
+DJANGO_ALLOWED_HOSTS=localhost
+DJANGO_SECURE_SSL_REDIRECT=False
+
+# Secrets
+
+FIELD_ENCRYPTION_KEY=UdC18SCAo5Ebj9eOBULtjl8EhsOiEA_NcmFTVlY_DvY=
+DJANGO_SECRET_KEY=wJNnkvJeVfwsySmVlHlQTyYNkIqvBefelYTGnmXm
