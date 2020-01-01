@@ -3,6 +3,7 @@ from sqlalchemy.engine import create_engine
 from . import Connector
 from ..constants import APPLICATIONS
 
+
 CONNECTION_STRINGS = {
     APPLICATIONS.POSTGRES: "postgres+psycopg2://{login}:{password}@{host}:{port}/{db}",
     APPLICATIONS.REDSHIFT: "redshift+psycopg2://{login}:{password}@{host}:{port}/{db}",
