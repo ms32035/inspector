@@ -27,6 +27,6 @@ def profile_table(profile_id, profiler: str):
     profile = TableProfile.objects.get(id=profile_id)
     profiler = PandasProfilerService(profile=profile)
     profiler.start_profiling()
-    profiler.profile_table()
+    profiler.run_profiling()
     profiler.save_report()
     profiler.save_profile()

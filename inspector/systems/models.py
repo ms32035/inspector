@@ -4,7 +4,7 @@ from encrypted_model_fields.fields import EncryptedCharField
 from django.contrib.postgres.fields import JSONField
 
 from .constants import APPLICATIONS
-from ..base.models import SoftDeletionModel
+from ..base.models import SoftDeletionModel, SoftDeletionManager
 
 
 class System(models.Model):
@@ -74,9 +74,9 @@ class Instance(models.Model):
         return f"{self.system.name} / {self.environment.name}"
 
 
-class DbTableManager(models.Manager):
+class DbTableManager(SoftDeletionManager):
     def get_queryset(self):
-        return super(DbTableManager, self).get_queryset().select_related()
+        return super().get_queryset().select_related()
 
 
 class DbTable(SoftDeletionModel):

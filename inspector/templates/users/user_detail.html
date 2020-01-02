@@ -6,7 +6,7 @@
 {% block inner %}
 
   <div class="card">
-    <article class="card-body">
+    <div class="card-body">
       <h4 class="card-title mb-4 mt-1">{{ object.username }}</h4>
       <hr/>
       {% if object == request.user %}
@@ -18,9 +18,13 @@
              class="list-group-item list-group-item-action text-center">My details</a>
           <a href="{% url 'account_email' %}"
              class="list-group-item list-group-item-action text-center">Emails</a>
+          <a href="{% url 'users:token' %}"
+             class="list-group-item list-group-item-action text-center"
+             onclick="return confirm('Are you sure?')">New API token</a>
         </div>
+        <ul class="list-group">
       {% endif %}
-    </article>
+    </div>
   </div>
 
 

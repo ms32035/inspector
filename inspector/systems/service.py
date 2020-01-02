@@ -20,24 +20,31 @@ class MetadataService:
             for tab in schema_tabs:
                 tables[f"{schema}.{tab}"] = (schema, tab)
 
-        db_tables = DbTable.objects.filter(
+        db_tables = DbTable.all_objects.filter(
             system=self.instance.system, environment=self.instance.environment
         )
+        for tab in db_tables:
+            ref_table = tables.pop(tab.fullname, None)
+            # in new
+            if ref_table:
+                # not in old - restore
+                if tab.deleted_at:
+                    tab.undelete()
+            # not in old
+            else:
+                tab.delete()
 
         create_list = []
 
+        # only new left now in tables
         for k, v in tables.items():
-            if k not in db_tables.values_list("fullname", flat=True):
-                create_list.append(
-                    DbTable(
-                        system=self.instance.system,
-                        environment=self.instance.environment,
-                        fullname=k,
-                        schema=v[0],
-                        name=v[1],
-                    )
+            create_list.append(
+                DbTable(
+                    system=self.instance.system,
+                    environment=self.instance.environment,
+                    fullname=k,
+                    schema=v[0],
+                    name=v[1],
                 )
+            )
         DbTable.objects.bulk_create(create_list)
-
-        # TO-DO: add removal
-        # remove_list = [tab for tab in db_tables if tab.fullname not in tables.keys()]

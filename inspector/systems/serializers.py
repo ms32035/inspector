@@ -18,4 +18,4 @@ class EnvironmentSerializer(serializers.ModelSerializer):
 class InstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Instance
-        fields = ("pk", "host", "port", "database_or_schema", "login", "password")
+        fields = ("pk", "host", "port", "db", "schema", "login", "password")

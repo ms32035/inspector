@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -22,6 +23,11 @@ urlpatterns = [
     path(
         "profiling/",
         include(("inspector.profiling.urls", "profiling"), namespace="profiling"),
+    ),
+    path(
+        "openapi",
+        get_schema_view(title="Inspector", description="Inspector API"),
+        name="openapi-schema",
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
