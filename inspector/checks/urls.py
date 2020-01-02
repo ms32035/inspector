@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework import routers
-from rest_framework.documentation import include_docs_urls
 
 from inspector.checks.views import (
     check_list_view,
@@ -17,7 +16,6 @@ urlpatterns = (
     # urls for Django Rest Framework API
     path("api/v1/", include(router.urls)),
     path("api/v1/runcheck/", api.RunCheck.as_view()),
-    path("apidocs/", include_docs_urls(title="Inspector API")),
 )
 
 urlpatterns += (

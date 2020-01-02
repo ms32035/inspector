@@ -33,6 +33,7 @@ class EnvironmentStatusViewSet(viewsets.ModelViewSet):
 
 
 class DatacheckRunPermission(AuthPermission):
+    authenticated_users_only = True
     perms = "checks.add_checkrun"
 
 

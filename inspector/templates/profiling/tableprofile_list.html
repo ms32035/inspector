@@ -45,6 +45,10 @@
               <i class="fas fa-file-alt" title="Report"></i>
             </a>
           </p>
+        {% elif object.status == 'ERROR' %}
+          <p class="text-center">
+            {% button_hoverdetail 'profiling/tableprofile_hoverdetail' object %}
+          </p>
         {% endif %}
         </td>
         <td>{{ object.user.username|p_c }}</td>
