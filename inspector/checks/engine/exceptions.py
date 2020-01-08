@@ -11,3 +11,8 @@ class InstanceNotFound(CheckExecutorException):
 
 class CheckTypeNotSupported(CheckExecutorException):
     pass
+
+
+class TooManyValues(CheckExecutorException):
+    def __init__(self):
+        super().__init__("Check result return 1 row and 1 column")
