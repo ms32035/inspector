@@ -1,7 +1,7 @@
 from . import CheckExecutor
+from ..exceptions import TooManyRows
 from ...constants import CHECK_TYPES
 from ....systems.connectors.sql_connector import SQLConnector
-from ..exceptions import TooManyValues
 
 
 class SQLExecutor(CheckExecutor, SQLConnector):
@@ -11,9 +11,9 @@ class SQLExecutor(CheckExecutor, SQLConnector):
         connection = self.engine.connect()
         res = connection.execute(check_logic)
         if res.rowcount > 1:
-            raise TooManyValues
+            raise TooManyRows
         row = res.fetchone()
-        if len(row) > 1:
-            raise TooManyValues
+        val = str(row) if len(row) > 1 else row[0]
+
         connection.close()
-        return row[0]
+        return val
