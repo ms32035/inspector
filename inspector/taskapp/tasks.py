@@ -23,9 +23,9 @@ def reflect_instance(instance_id: int):
 
 
 @shared_task
-def profile_table(profile_id, profiler: str):
+def profile_table(profile_id, mode: str):
     profile = TableProfile.objects.get(id=profile_id)
-    profiler = PandasProfilerService(profile=profile)
+    profiler = PandasProfilerService(profile=profile, mode=mode)
     profiler.start_profiling()
     profiler.run_profiling()
     profiler.save_report()

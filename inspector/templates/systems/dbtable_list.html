@@ -2,6 +2,7 @@
 {% load static %}
 {% load bootstrap_pagination %}
 {% load buttons %}
+{% load modals %}
 {% load ui %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -51,4 +52,13 @@
 
   {% bootstrap_paginate page_obj range=10 %}
 
+  {% modals_modal 'dbtable' %}
+
 {% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+
+  {% modals_js 'run' 'dbtable' %}
+
+{% endblock javascript %}

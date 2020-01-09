@@ -1,3 +1,4 @@
+from bootstrap_modal_forms.forms import BSModalForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Row, Column
 from django import forms
@@ -41,3 +42,17 @@ class TableProfileFilterForm(forms.Form):
             "user",
             "status",
         ]
+
+
+class TableProfileRunForm(BSModalForm):
+    mode = forms.ChoiceField(
+        label="Profiling mode",
+        choices=[
+            ("pandas_minimal", "Pandas - minimal"),
+            ("pandas_full", "Pandas - full"),
+        ],
+    )
+
+    class Meta:
+        model = TableProfile
+        fields = []

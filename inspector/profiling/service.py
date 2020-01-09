@@ -18,9 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 class ProfilerService(ExceptionCollectorMixin, metaclass=ABCMeta):
-    def __init__(self, profile: TableProfile):
+    def __init__(self, profile: TableProfile, mode: str):
         super().__init__()
         self.profile: TableProfile = profile
+        self.mode: str = mode
 
         instance = Instance.objects.get(
             system=profile.dbtable.system, environment=profile.dbtable.environment
@@ -94,6 +95,8 @@ class PandasProfilerService(ProfilerService):
         )
         self.profile.rows = len(df.index)
         logging.info("Generating Pandas Profiling report")
-        profile_report = ProfileReport(df, title=self.report_file_name)
+        profile_report = ProfileReport(
+            df, title=self.report_file_name, minimal=self.mode == "pandas_minimal"
+        )
         logging.info("Saving profiling report: %s", self.report_file_path)
         profile_report.to_file(self.report_file_path)

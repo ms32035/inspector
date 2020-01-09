@@ -1,30 +1,33 @@
+from bootstrap_modal_forms.generic import BSModalCreateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.messages import success
 from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, View
 from django_filters.views import BaseFilterView
 
 from .filters import TableProfileFilter
+from .forms import TableProfileRunForm
 from .models import TableProfile
-from ..systems.models import DbTable
 from ..taskapp.tasks import profile_table
 
 
-class TableProfileCreateView(PermissionRequiredMixin, View):
+class TableProfileCreateView(PermissionRequiredMixin, BSModalCreateView):
     permission_required = "profiling.add_tableprofile"
     success_message = "Success: Profiling job was triggered."
     success_url = reverse_lazy("profiling:profile_list")
+    template_name = "components/modals_run.html"
+    form_class = TableProfileRunForm
 
-    def get(self, request, *args, **kwargs):
-        profile = TableProfile(
-            dbtable=DbTable.objects.get(id=self.kwargs["pk"]), user=request.user
-        )
-        profile.save()
-        profile_table.delay(profile.id, "pandas")
-        success(request, message=self.success_message)
-        return redirect(self.success_url)
+    def form_valid(self, form):
+        form.instance.dbtable_id = self.kwargs["pk"]
+        self.kwargs["mode"] = form.data["mode"]
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if not self.request.is_ajax():
+            profile_table.delay(self.object.id, self.kwargs["mode"])
+        return super().get_success_url()
 
 
 class TableProfileListView(PermissionRequiredMixin, BaseFilterView, ListView):
