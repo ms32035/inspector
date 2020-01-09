@@ -36,3 +36,7 @@ nav {
   font-size: .75rem;
   padding: .2rem .45rem;
 }
+
+.modal-dialog {
+  max-width: 50%;
+}
