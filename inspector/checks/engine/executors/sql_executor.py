@@ -1,3 +1,5 @@
+from sqlalchemy import text
+
 from . import CheckExecutor
 from ..exceptions import TooManyRows
 from ...constants import CHECK_TYPES
@@ -9,7 +11,7 @@ class SQLExecutor(CheckExecutor, SQLConnector):
 
     def execute(self, check_logic):
         connection = self.engine.connect()
-        res = connection.execute(check_logic)
+        res = connection.execute(text(check_logic))
         if res.rowcount > 1:
             raise TooManyRows
         row = res.fetchone()
