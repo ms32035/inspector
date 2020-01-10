@@ -37,6 +37,14 @@ nav {
   padding: .2rem .45rem;
 }
 
+.modal {
+  text-align: center;
+}
+
 .modal-dialog {
-  max-width: 50%;
+  max-width: 75%;
+  width: auto !important;
+  display: inline-block;
+  text-align: left;
+  min-width: 25%;
 }
