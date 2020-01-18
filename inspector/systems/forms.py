@@ -98,4 +98,4 @@ class DbTableFilterForm(forms.ModelForm):
 
     class Meta:
         model = DbTable
-        fields = ["system", "environment", "schema"]
+        fields = ["system", "environment"]

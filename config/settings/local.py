@@ -71,6 +71,6 @@ CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
-
-INSTALLED_APPS += ["silk"]
-MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
+if env.bool("DJANGO_SILK_ENABLED", False):
+    INSTALLED_APPS += ["silk"]
+    MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
