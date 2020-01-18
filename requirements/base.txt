@@ -27,8 +27,8 @@ git+https://github.com/ms32035/django-encrypted-model-fields@v0.6.0#egg=django-e
 django-bootstrap-pagination==1.7.1  # https://github.com/jmcclell/django-bootstrap-pagination
 djangocodemirror==2.1.0  # https://github.com/sveetch/djangocodemirror
 django-filter==2.2.0  # https://github.com/carltongibson/django-filter
-django-health-check==3.11.1  # https://github.com/KristianOellegaard/django-health-check
-django-import-export==2.0
+django-health-check==3.12.1  # https://github.com/KristianOellegaard/django-health-check
+django-import-export==2.0.1
 django-appconf==1.0.3
 django-taggit==1.2.0
 django-storages==1.8
