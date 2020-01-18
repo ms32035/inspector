@@ -27,10 +27,13 @@ class CheckListView(PermissionRequiredMixin, ListView):
     model = Datacheck
     slug_field = "code"
     slug_url_kwarg = "code"
-    ordering = ["code"]
 
     def get_queryset(self):
-        return Datacheck.objects.prefetch_related("tags").select_related("left_system")
+        return (
+            Datacheck.objects.prefetch_related("tags")
+            .select_related("left_system")
+            .order_by("code")
+        )
 
 
 check_list_view = CheckListView.as_view()
