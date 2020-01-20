@@ -2,6 +2,7 @@ from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteMessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages import success
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Max, Subquery
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
@@ -16,10 +17,10 @@ from django.views.generic import (
 from django_filters.views import BaseFilterView
 
 from inspector.taskapp.tasks import execute_check
-from .filters import CheckRunFilter, EnvironmentStatusFilter
+from .filters import CheckRunFilter
 from .forms import DatacheckRunForm, DatacheckForm, CheckRunTagForm
-from .models import Datacheck, CheckRun, EnvironmentStatus
-from .service import CheckRunService, EnvironmentStatusService
+from .models import Datacheck, CheckRun
+from .service import CheckRunService
 
 
 class CheckListView(PermissionRequiredMixin, ListView):
@@ -55,7 +56,7 @@ class DatacheckRunView(
     template_name = "components/modals_run.html"
     form_class = DatacheckRunForm
     success_message = "Success: Check was triggered."
-    success_url = reverse_lazy("checks_checkrun_list")
+    success_url = reverse_lazy("checks:checkrun_list")
 
     def form_valid(self, form):
         form.instance.datacheck_id = self.kwargs["pk"]
@@ -76,7 +77,7 @@ datacheck_run_view = DatacheckRunView.as_view()
 class CheckRunRerunView(PermissionRequiredMixin, View):
     permission_required = "checks.add_checkrun"
     success_message = "Success: Check was retriggered."
-    success_url = reverse_lazy("checks_checkrun_list")
+    success_url = reverse_lazy("checks:checkrun_list")
 
     def get(self, request, *args, **kwargs):
         CheckRunService.checkrun_rerun(kwargs["pk"], request.user)
@@ -91,7 +92,7 @@ class CheckRunTagView(
     template_name = "components/modals_run.html"
     form_class = CheckRunTagForm
     success_message = "Success: Checks were triggered."
-    success_url = reverse_lazy("checks_checkrun_list")
+    success_url = reverse_lazy("checks:checkrun_list")
 
     def form_valid(self, form):
         if not self.request.is_ajax():
@@ -103,11 +104,11 @@ class CheckRunTagView(
 
 
 class DatacheckDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
-    permission_required = "checks.delete_datacheck"
+    permission_required = "delete_datacheck"
     model = Datacheck
     template_name = "components/modals_delete.html"
     success_message = "Success: Check was deleted."
-    success_url = reverse_lazy("checks_datacheck_list")
+    success_url = reverse_lazy("checks:datacheck_list")
 
 
 check_delete_view = DatacheckDeleteView.as_view()
@@ -143,7 +144,7 @@ class DatacheckCreateView(PermissionRequiredMixin, CreateView):
     form_class = DatacheckForm
 
     def get_success_url(self):
-        return reverse("checks_datacheck_list")
+        return reverse("checks:datacheck_list")
 
 
 class DatacheckUpdateView(PermissionRequiredMixin, UpdateView):
@@ -152,21 +153,7 @@ class DatacheckUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = DatacheckForm
 
     def get_success_url(self):
-        return reverse("checks_datacheck_list")
-
-
-class EnvironmentStatusListView(PermissionRequiredMixin, BaseFilterView, ListView):
-    permission_required = "checks.view_environmentstatus"
-    model = EnvironmentStatus
-    filterset_class = EnvironmentStatusFilter
-
-    def get_queryset(self):
-        qs = EnvironmentStatus.objects.select_related().order_by(
-            "environment", "datacheck"
-        )
-        qs_filtered_list = EnvironmentStatusFilter(self.request.GET, queryset=qs)
-
-        return qs_filtered_list.qs
+        return reverse("checks:datacheck_list")
 
 
 class DatacheckInfoView(PermissionRequiredMixin, DetailView):
@@ -175,12 +162,29 @@ class DatacheckInfoView(PermissionRequiredMixin, DetailView):
     template_name = "checks/datacheck_info.html"
 
 
-class EnvironmentStatusRerunView(PermissionRequiredMixin, View):
-    permission_required = "checks.add_checkrun"
-    success_message = "Success: Check was retriggered."
-    success_url = reverse_lazy("checks_checkrun_list")
+class CheckRunLatestListView(PermissionRequiredMixin, BaseFilterView, ListView):
+    permission_required = "checks.view_checkrun"
+    model = CheckRun
+    paginate_by = 50
+    filterset_class = CheckRunFilter
 
-    def get(self, request, *args, **kwargs):
-        EnvironmentStatusService.env_status_rerun(kwargs["pk"], request.user)
-        success(request, self.success_message)
-        return redirect(self.success_url)
+    def get_paginate_by(self, queryset):
+        """
+        Paginate by specified value in querystring, or use default class property value.
+        """
+        return self.request.GET.get("paginate_by", self.paginate_by)
+
+    def get_queryset(self):
+        latest_id = (
+            CheckRun.objects.values("datacheck_id", "environment_id")
+            .annotate(max_id=Max("id"))
+            .values("max_id")
+        )
+        qs = (
+            CheckRun.objects.filter(id__in=Subquery(latest_id))
+            .select_related()
+            .order_by("environment__name", "datacheck__code")
+        )
+        qs_filtered_list = CheckRunFilter(self.request.GET, queryset=qs)
+
+        return qs_filtered_list.qs

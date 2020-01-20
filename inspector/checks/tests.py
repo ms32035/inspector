@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .constants import CHECK_TYPES, RELATIONS
-from .models import Datacheck, CheckRun, EnvironmentStatus
+from .models import Datacheck, CheckRun
 from ..base.tests import TestUser
 from ..systems.tests import create_system, create_environment
 
@@ -79,20 +79,6 @@ def create_checkrun(**kwargs):
     return CheckRun.objects.create(**defaults)
 
 
-def create_environmentstatus(**kwargs):
-    defaults = {}
-    defaults["status"] = "status"
-    defaults["result"] = "result"
-    defaults.update(**kwargs)
-    if "datacheck" not in defaults:
-        defaults["datacheck"] = create_datacheck()
-    if "environment" not in defaults:
-        defaults["environment"] = create_environment()
-    if "user" not in defaults:
-        defaults["user"] = create_django_contrib_auth_models_user()
-    return EnvironmentStatus.objects.create(**defaults)
-
-
 class DatacheckViewTest(TestCase):
     """
     Tests for Datacheck
@@ -108,13 +94,13 @@ class DatacheckViewTest(TestCase):
 
     def test_list_datacheck(self):
         self.test_user.add_permission(Datacheck, "view_datacheck")
-        url = reverse("checks_datacheck_list")
+        url = reverse("checks:datacheck_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_datacheck(self):
         self.test_user.add_permission(Datacheck, "add_datacheck")
-        url = reverse("checks_datacheck_create")
+        url = reverse("checks:datacheck_create")
         data = {
             "code": "code",
             "description": "description",
@@ -136,7 +122,7 @@ class DatacheckViewTest(TestCase):
     def test_detail_datacheck(self):
         self.test_user.add_permission(Datacheck, "view_datacheck")
         datacheck = create_datacheck()
-        url = reverse("checks_datacheck_detail", args=[datacheck.pk])
+        url = reverse("checks:datacheck_detail", args=[datacheck.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -158,7 +144,7 @@ class DatacheckViewTest(TestCase):
             "left_system": create_system().pk,
             "right_system": create_system().pk,
         }
-        url = reverse("checks_datacheck_update", args=[datacheck.pk])
+        url = reverse("checks:datacheck_update", args=[datacheck.pk])
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
 
@@ -179,13 +165,13 @@ class CheckRunViewTest(TestCase):
     def test_list_checkrun(self):
         self.test_user.add_permission(CheckRun, "view_checkrun")
 
-        url = reverse("checks_checkrun_list")
+        url = reverse("checks:checkrun_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_create_checkrun(self):
         self.test_user.add_permission(CheckRun, "add_checkrun")
-        url = reverse("checks_checkrun_create")
+        url = reverse("checks:checkrun_create")
         data = {"environment": create_environment(), "id": create_datacheck().pk}
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -193,20 +179,6 @@ class CheckRunViewTest(TestCase):
     def test_detail_checkrun(self):
         self.test_user.add_permission(CheckRun, "view_checkrun")
         checkrun = create_checkrun()
-        url = reverse("checks_checkrun_detail", args=[checkrun.pk])
+        url = reverse("checks:checkrun_detail", args=[checkrun.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-
-class EnvironmentStatusViewTest(TestCase):
-    """
-    Tests for EnvironmentStatus
-    """
-
-    def setUp(self):
-        self.client = Client()
-
-    def test_list_environmentstatus(self):
-        url = reverse("checks_environmentstatus_list")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)

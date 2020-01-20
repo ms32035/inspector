@@ -9,7 +9,7 @@ from .exceptions import CheckExecutorException, InstanceNotFound
 from .executors import CheckExecutor, CONFIG
 from .executors.python_executor import PythonExecutor
 from ..constants import RELATIONS, RESULTS
-from ..models import CheckRun, Datacheck, EnvironmentStatus
+from ..models import CheckRun, Datacheck
 from ...base.constants import STATUSES
 from ...base.mixins import ExceptionCollectorMixin
 from ...systems.models import Instance, System
@@ -132,29 +132,6 @@ class CheckProcessor(ExceptionCollectorMixin):
             self.checkrun.status = STATUSES.ERROR
 
         self.checkrun.save()
-
-        try:
-            environment_status: EnvironmentStatus = EnvironmentStatus.objects.get(
-                environment=self.checkrun.environment, datacheck=self.checkrun.datacheck
-            )
-            environment_status.user = self.checkrun.user
-        except EnvironmentStatus.DoesNotExist:
-            environment_status: EnvironmentStatus = EnvironmentStatus(
-                environment=self.checkrun.environment,
-                datacheck=self.checkrun.datacheck,
-                user=self.checkrun.user,
-            )
-
-        environment_status.result = result
-        if self.status:
-            environment_status.last_start_time = self.checkrun.start_time
-            environment_status.last_end_time = end_time
-            environment_status.status = STATUSES.FINISHED
-        else:
-            environment_status.last_start_time = None
-            environment_status.last_end_time = None
-            environment_status.status = STATUSES.ERROR
-        environment_status.save()
 
 
 class CheckComparator:

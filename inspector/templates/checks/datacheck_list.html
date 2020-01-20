@@ -16,12 +16,12 @@
       <p class="text-right">
         {% if perms.checks.add_checkrun %}
           <button class="datacheck-run-tag btn btn-outline-success btn-sm" type="button" name="button"
-                  data-url="{% url 'check_checkrun_runtag' %}">
+                  data-url="{% url 'checks:checkrun_runtag' %}">
             <i class="fas fa-play" title="Run checks"></i>
           </button>
         {% endif %}
         {% if perms.checks.add_datacheck %}
-          {% button_new 'checks_datacheck_create' %}
+          {% button_new 'checks:datacheck_create' %}
         {% endif %}
       </p>
     </th>
@@ -42,9 +42,9 @@
         <td>
           <p class="text-right">
             <button class="btn btn-outline-secondary btn-sm datacheck-details btn-table" data-title="Details"
-                    data-url="{% url 'checks_datacheck_info' object.id %}">
+                    data-url="{% url 'checks:datacheck_info' object.id %}">
               <span class="fas fa-info-circle fa-sm"></span></button>
-            <a href="{% url 'checks_checkrun_list' %}?datacheck={{ object.id }}" title="Runs">
+            <a href="{% url 'checks:checkrun_list' %}?datacheck={{ object.id }}" title="Runs">
               <button class="btn btn-outline-secondary btn-sm btn-table">
                 <span class="far fa-clock fa-sm"></span>
               </button>

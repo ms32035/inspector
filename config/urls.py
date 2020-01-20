@@ -16,7 +16,7 @@ urlpatterns = [
     path("", include("inspector.base.urls")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
-    path("", include("inspector.checks.urls")),
+    path("checks/", include(("inspector.checks.urls", "checks"), namespace="checks")),
     path(
         "systems/", include(("inspector.systems.urls", "systems"), namespace="systems")
     ),

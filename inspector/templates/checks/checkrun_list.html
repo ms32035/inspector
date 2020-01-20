@@ -39,7 +39,7 @@
           <p class="text-right">
             {% button_hoverdetail 'checks/checkrun_hoverdetail' object %}
             <button class="btn btn-outline-secondary btn-sm datacheck-details btn-table" data-title="Details"
-                    data-url="{% url 'checks_datacheck_info' object.datacheck.id %}">
+                    data-url="{% url 'checks:datacheck_info' object.datacheck.id %}">
               <span class="fas fa-info-circle fa-sm"></span>
             </button>
             {% button_rerun object %}

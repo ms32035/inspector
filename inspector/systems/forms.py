@@ -90,7 +90,7 @@ class DbTableFilterForm(forms.ModelForm):
                 css_class="form-group col-md-1 mb-1",
             ),
             Column(
-                button_reset("checks_checkrun_list"),
+                button_reset("checks:checkrun_list"),
                 css_class="form-group col-md-1 mb-1",
             ),
         )

@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
-from taggit.models import Tag
 from django.db import transaction
+from taggit.models import Tag
 
 from inspector.taskapp.tasks import execute_check
-from .models import Datacheck, Environment, CheckRun, EnvironmentStatus
+from .models import Datacheck, Environment, CheckRun
 
 
 class CheckRunService:
@@ -35,18 +35,8 @@ class CheckRunService:
         return check_run.id
 
     @staticmethod
-    def checkrun_rerun(ckeckrun_id: int, user: User):
-        checkrun: CheckRun = CheckRun.objects.get(id=ckeckrun_id)
+    def checkrun_rerun(checkrun_id: int, user: User):
+        checkrun: CheckRun = CheckRun.objects.get(id=checkrun_id)
         CheckRunService.create_and_execute_checkrun(
             check=checkrun.datacheck, environment=checkrun.environment, user=user
-        )
-
-
-class EnvironmentStatusService:
-    @staticmethod
-    def env_status_rerun(status_id: int, user: User):
-        env_status: EnvironmentStatus = EnvironmentStatus.objects.get(id=status_id)
-
-        CheckRunService.create_and_execute_checkrun(
-            check=env_status.datacheck, environment=env_status.environment, user=user
         )

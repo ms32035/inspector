@@ -57,7 +57,7 @@
         {% if request.user.is_authenticated %}
           {% if perms.checks.view_environmentstatus %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'checks_environmentstatus_list' %}">Status</a>
+              <a class="nav-link" href="{% url 'checks:datacheck_status' %}">Status</a>
             </li>
           {% endif %}
           <li class="nav-item dropdown">
@@ -67,10 +67,10 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownChecks">
               {% if perms.checks.view_datacheck %}
-                <a class="dropdown-item" href="{% url 'checks_datacheck_list' %}">Checks</a>
+                <a class="dropdown-item" href="{% url 'checks:datacheck_list' %}">Checks</a>
               {% endif %}
               {% if perms.checks.view_checkrun %}
-                  <a class="dropdown-item" href="{% url 'checks_checkrun_list' %}">Check runs</a>
+                  <a class="dropdown-item" href="{% url 'checks:checkrun_list' %}">Check runs</a>
               {% endif %}
             </div>
           </li>
