@@ -24,14 +24,6 @@ class CheckRunViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.DjangoModelPermissions]
 
 
-class EnvironmentStatusViewSet(viewsets.ModelViewSet):
-    """ViewSet for the EnvironmentStatus class"""
-
-    queryset = models.EnvironmentStatus.objects.all()
-    serializer_class = serializers.EnvironmentStatusSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
 class DatacheckRunPermission(AuthPermission):
     authenticated_users_only = True
     perms = "checks.add_checkrun"

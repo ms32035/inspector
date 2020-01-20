@@ -19,11 +19,7 @@ DEFAULTS = {
         "instance": ["view", "add", "change", "delete"],
         "dbtable": ["view", "add", "change", "delete"],
     },
-    "Checks - read": {
-        "datacheck": ["view"],
-        "checkrun": ["view"],
-        "environmentstatus": ["view"],
-    },
+    "Checks - read": {"datacheck": ["view"], "checkrun": ["view"]},
     "Checks - edit": {
         "datacheck": ["view", "add", "change", "delete"],
         "checkrun": ["view", "add", "change", "delete"],

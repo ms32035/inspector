@@ -6,7 +6,7 @@ from django import forms
 from djangocodemirror.widgets import CodeMirrorWidget
 from taggit.models import Tag
 
-from .models import Datacheck, CheckRun, EnvironmentStatus
+from .models import Datacheck, CheckRun
 from ..base.components import fa_icon, button_reset
 from ..base.constants import SUBMIT_CSS_CLASSES
 from ..base.forms import prepended_select_column
@@ -154,20 +154,6 @@ class CheckRunForm(forms.ModelForm):
         ]
 
 
-class EnvironmentStatusForm(forms.ModelForm):
-    class Meta:
-        model = EnvironmentStatus
-        fields = [
-            "last_start_time",
-            "last_end_time",
-            "status",
-            "result",
-            "datacheck",
-            "environment",
-            "user",
-        ]
-
-
 class CheckRunFilterForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_method = "GET"
@@ -185,7 +171,7 @@ class CheckRunFilterForm(forms.ModelForm):
                 css_class="form-group col-md-1 mb-1",
             ),
             Column(
-                button_reset("checks_checkrun_list"),
+                button_reset("checks:checkrun_list"),
                 css_class="form-group col-md-1 mb-1",
             ),
             css_class="form-row",
@@ -195,29 +181,3 @@ class CheckRunFilterForm(forms.ModelForm):
     class Meta:
         model = CheckRun
         fields = ["datacheck", "environment", "user", "status", "result"]
-
-
-class EnvironmentStatusFilterForm(forms.ModelForm):
-    helper = FormHelper()
-    helper.form_method = "GET"
-    helper.layout = Layout(
-        Row(
-            prepended_select_column("environment", 2, "mb-0"),
-            prepended_select_column("datacheck", 4, "mb-0"),
-            prepended_select_column("status", 2, "mb-0"),
-            prepended_select_column("result", 2, "mb-0"),
-            Column(
-                Submit("submit", "Search", css_class=SUBMIT_CSS_CLASSES),
-                css_class="form-group col-md-1 mb-0",
-            ),
-            Column(
-                button_reset("checks_environmentstatus_list"),
-                css_class="form-group col-md-1 mb-0",
-            ),
-            css_class="form-row",
-        )
-    )
-
-    class Meta:
-        model = EnvironmentStatus
-        fields = ["environment", "datacheck", "status", "result"]

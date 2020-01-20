@@ -39,12 +39,6 @@ class CheckRunSerializer(serializers.ModelSerializer):
         )
 
 
-class EnvironmentStatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.EnvironmentStatus
-        fields = ("pk", "last_start_time", "last_end_time", "status", "result")
-
-
 class CheckRunCreateSerializer(serializers.Serializer):
     check_code = serializers.CharField(max_length=20, required=True, allow_blank=False)
     environment = serializers.CharField(max_length=50, required=True, allow_blank=False)

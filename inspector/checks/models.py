@@ -43,7 +43,7 @@ class Datacheck(models.Model):
         return "%s" % self.pk
 
     def get_url(self, action):
-        return reverse(f"checks_datacheck_{action}", args=(self.pk,))
+        return reverse(f"checks:datacheck_{action}", args=(self.pk,))
 
     def get_name(self):
         return self.code
@@ -70,17 +70,4 @@ class CheckRun(models.Model):
         return "%s" % self.pk
 
     def get_url(self, action):
-        return reverse(f"checks_checkrun_{action}", args=(self.pk,))
-
-
-class EnvironmentStatus(models.Model):
-    datacheck = models.ForeignKey(Datacheck, on_delete=models.CASCADE)
-    environment = models.ForeignKey(Environment, on_delete=models.CASCADE)
-    last_start_time = models.DateTimeField(null=True)
-    last_end_time = models.DateTimeField(null=True)
-    status = models.CharField(max_length=20, choices=STATUSES)
-    result = models.CharField(max_length=20, choices=RESULTS, null=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.PROTECT)
-
-    def get_url(self, action):
-        return reverse(f"checks_environmentstatus_{action}", args=(self.pk,))
+        return reverse(f"checks:checkrun_{action}", args=(self.pk,))
