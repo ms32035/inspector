@@ -12,13 +12,8 @@ class DbTableFilter(django_filters.FilterSet):
         self.filters["environment"].label = ICONS["environment"]
         self.filters["schema"].label = ICONS["schema"]
 
-    schema = django_filters.ChoiceFilter(
-        choices=[
-            (s, s)
-            for s in DbTable.objects.order_by("schema")
-            .values_list("schema", flat=True)
-            .distinct()
-        ]
+    schema = django_filters.ModelChoiceFilter(
+        queryset=DbTable.objects.order_by("schema").values("schema").distinct()
     )
 
     class Meta:
