@@ -79,6 +79,13 @@ class InstanceCreateView(PermissionRequiredMixin, CreateView):
     model = Instance
     form_class = InstanceForm
 
+    @sensitive_variables("new_password")
+    def form_valid(self, form):
+        clean = form.cleaned_data
+        new_password = clean.get("new_password")
+        form.instance.password = new_password
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse("systems:instance_list")
 
