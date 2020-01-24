@@ -13,7 +13,7 @@ class DbTableFilter(django_filters.FilterSet):
         self.filters["schema"].label = ICONS["schema"]
 
     schema = django_filters.ModelChoiceFilter(
-        queryset=DbTable.objects.order_by("schema").values("schema").distinct()
+        queryset=DbTable.objects.values_list("schema", flat=True).distinct().order_by("schema")
     )
 
     class Meta:
