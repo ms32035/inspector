@@ -100,7 +100,7 @@
               Profiling
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSystems">
-              {% if perms.profiling.view_profile %}
+              {% if perms.profiling.view_tableprofile %}
                 <a class="dropdown-item" href="{% url 'profiling:profile_list' %}">Profiles</a>
               {% endif %}
             </div>
