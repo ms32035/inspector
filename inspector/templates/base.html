@@ -55,7 +55,7 @@
         </li>
 
         {% if request.user.is_authenticated %}
-          {% if perms.checks.view_environmentstatus %}
+          {% if perms.checks.view_checkrun %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'checks:datacheck_status' %}">Status</a>
             </li>
