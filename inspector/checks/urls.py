@@ -16,6 +16,7 @@ urlpatterns = (
     # urls for Django Rest Framework API
     path("api/v1/", include(router.urls)),
     path("api/v1/runcheck/", api.RunCheck.as_view()),
+    path("api/v1/runchecktag/", api.RunCheckTag.as_view()),
 )
 
 urlpatterns += (
