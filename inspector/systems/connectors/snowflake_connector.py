@@ -1,5 +1,6 @@
 from snowflake.sqlalchemy import URL
 from sqlalchemy import create_engine
+from pandas import DataFrame
 
 from .sql_connector import SQLConnector
 
@@ -18,3 +19,9 @@ class SnowflakeConnector(SQLConnector):
                 role=json_data["role"],
             )
         )
+
+    def table_df(self, table: str, schema: str = None) -> DataFrame:
+        cur = self.engine.raw_connection().cursor()
+        sql = f"SELECT * FROM {schema}.{table}"
+        cur.execute(sql)
+        return cur.fetch_pandas_all()
