@@ -2,6 +2,7 @@ from sqlalchemy.engine import create_engine
 
 from . import Connector
 from ..constants import APPLICATIONS
+from pandas import DataFrame, read_sql_table
 
 CONNECTION_STRINGS = {
     APPLICATIONS.POSTGRES: "postgres+psycopg2://{login}:{password}@{host}:{port}/{db}",
@@ -28,3 +29,6 @@ class SQLConnector(Connector):
     def test_connection(self):
         connection = self.engine.connect()
         connection.close()
+
+    def table_df(self, table: str, schema: str = None) -> DataFrame:
+        return read_sql_table(con=self.engine, table_name=table, schema=schema)

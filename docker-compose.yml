@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: compose/master/inspector/Dockerfile
-    image: ms32035/inpector:master
+    image: ms32035/inspector:master
     env_file:
       - .envs/django
       - .envs/postgres
@@ -16,19 +16,19 @@ services:
 
   celeryworker:
     <<: *inspector
-    image: ms32035/inpector:master
+    image: ms32035/inspector:master
     ports: []
     command: /start-celeryworker
 
   celerybeat:
     <<: *inspector
-    image: ms32035/inpector:master
+    image: ms32035/inspector:master
     ports: []
     command: /start-celerybeat
 
   flower:
     <<: *inspector
-    image: ms32035/inpector:master
+    image: ms32035/inspector:master
     ports:
       - "5555:5555"
     command: /start-flower

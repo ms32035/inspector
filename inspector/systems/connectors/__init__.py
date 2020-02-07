@@ -1,5 +1,6 @@
 from abc import ABCMeta
 from importlib import import_module
+from pandas import DataFrame
 from typing import Optional
 
 from sqlalchemy.engine import Engine
@@ -30,6 +31,9 @@ class Connector(metaclass=ABCMeta):
 
     def test_connection(self):
         pass
+
+    def table_df(self, table: str, schema: str = None) -> DataFrame:
+        raise NotImplementedError
 
 
 def get_connector_for_instance(instance: Instance):

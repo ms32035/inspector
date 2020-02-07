@@ -82,17 +82,15 @@ class ProfilerService(ExceptionCollectorMixin, metaclass=ABCMeta):
 
 class PandasProfilerService(ProfilerService):
     def profile_table(self):
-        from pandas import read_sql_table
         from pandas_profiling import ProfileReport
 
         self.connector.get_engine()
         self.connector.test_connection()
         logging.info("Loading table into DataFrame")
-        df = read_sql_table(
-            table_name=self.profile.dbtable.name,
-            con=self.connector.engine,
-            schema=self.profile.dbtable.schema,
+        df = self.connector.table_df(
+            table=self.profile.dbtable.name, schema=self.profile.dbtable.schema
         )
+
         self.profile.rows = len(df.index)
         logging.info("Generating Pandas Profiling report")
         profile_report = ProfileReport(
