@@ -104,7 +104,7 @@ class CheckRunTagView(
 
 
 class DatacheckDeleteView(PermissionRequiredMixin, DeleteMessageMixin, DeleteView):
-    permission_required = "delete_datacheck"
+    permission_required = "checks.delete_datacheck"
     model = Datacheck
     template_name = "components/modals_delete.html"
     success_message = "Success: Check was deleted."
