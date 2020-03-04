@@ -69,9 +69,7 @@ class RunCheckTag(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         try:
             CheckRunService.run_check_tag(
-                serializer["checkgroup_name"].value,
-                serializer["environment"].value,
-                request.user,
+                serializer["tag"].value, serializer["environment"].value, request.user,
             )
         except models.Environment.DoesNotExist as exc:
             return Response(str(exc), status=400)
