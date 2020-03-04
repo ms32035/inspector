@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, authentication, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from taggit.models import Tag
 
 from . import models
 from . import serializers
@@ -69,7 +70,9 @@ class RunCheckTag(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         try:
             CheckRunService.run_check_tag(
-                serializer["tag"].value, serializer["environment"].value, request.user,
+                Tag(name=serializer["tag"].value),
+                serializer["environment"].value,
+                request.user,
             )
         except models.Environment.DoesNotExist as exc:
             return Response(str(exc), status=400)
