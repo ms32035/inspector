@@ -1,15 +1,15 @@
 pytz==2019.3  # https://github.com/stub42/pytz
 python-slugify==4.0.0  # https://github.com/un33k/python-slugify
-Pillow==7.0.0  # https://github.com/python-pillow/Pillow
+Pillow==7.1.1  # https://github.com/python-pillow/Pillow
 rcssmin==1.0.6  # https://github.com/ndparker/rcssmin
 argon2-cffi==19.2.0  # https://github.com/hynek/argon2_cffi
 redis==3.4.1  # pyup: < 4.0 # https://github.com/antirez/redis
 celery==4.4.2  # pyup: < 5.0  # https://github.com/celery/celery
-flower==0.9.3  # https://github.com/mher/flower
+flower==0.9.4  # https://github.com/mher/flower
 
 # Django
 # ------------------------------------------------------------------------------
-django==3.0.4  # pyup: < 2.1  # https://www.djangoproject.com/
+django==3.0.5  # pyup: < 2.1  # https://www.djangoproject.com/
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
 django-allauth==0.41.0  # https://github.com/pennersr/django-allauth
@@ -29,16 +29,16 @@ djangocodemirror==2.1.0  # https://github.com/sveetch/djangocodemirror
 django-filter==2.2.0  # https://github.com/carltongibson/django-filter
 django-health-check==3.12.1  # https://github.com/KristianOellegaard/django-health-check
 django-import-export==2.0.2
-django-appconf==1.0.3
+django-appconf==1.0.4
 django-taggit==1.2.0
 django-storages==1.9.1
 
 tornado==6.0.4  # https://github.com/tornadoweb/tornado
-sqlalchemy==1.3.15
+sqlalchemy==1.3.16
 
 # Profiling
 pandas==1.0.3
-pandas-profiling==2.5.0
+pandas-profiling==2.6.0
 notebook==6.0.3
 ipywidgets==7.5.1
 uritemplate==3.0.1
