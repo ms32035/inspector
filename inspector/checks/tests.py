@@ -22,8 +22,8 @@ def create_django_contrib_auth_models_user(**kwargs):
     defaults["username"] = "user-{}".format(user_no)
     defaults["email"] = "user-{}@tempurl.com".format(user_no)
     defaults.update(**kwargs)
-    User = get_user_model()
-    return User.objects.create(**defaults)
+    user = get_user_model()
+    return user.objects.create(**defaults)
 
 
 def create_django_contrib_auth_models_group(**kwargs):

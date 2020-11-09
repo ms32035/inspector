@@ -1,14 +1,13 @@
 default_language_version:
-  python: python3.7
+  python: python3.8
 repos:
   - repo: https://github.com/psf/black
-    rev: 19.10b0
+    rev: 20.8b1
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.4.0
+    rev: v3.3.0
     hooks:
-      - id: flake8
       - id: check-merge-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -18,3 +17,7 @@ repos:
 #      hooks:
 #        - id: pylint
 #          additional_dependencies: [pylint-django, pylint-celery]
+  - repo: https://github.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+      - id: flake8
