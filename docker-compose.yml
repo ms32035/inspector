@@ -1,0 +1,122 @@
+version: '3'
+
+
+services:
+  inspector:
+    build:
+      context: .
+      dockerfile: compose/production/inspector/Dockerfile
+    image: ms32035/inspector:latest
+    restart: unless-stopped
+    expose:
+      - 5000
+    env_file:
+      - .envs/.production/.inspector
+      - .envs/.production/.postgres
+    depends_on:
+      - postgres
+      - redis
+    command: /start
+    volumes:
+      - profiling_reports:/app/inspector/media/profiling_reports
+    networks:
+      - inspector
+      - inspector_backend
+    labels:
+      traefik.enable: true
+      traefik.http.routers.inspector.rule: Host(`$INSPECTOR_BACKEND_HOST`)
+      traefik.http.routers.inspector.entrypoints: $TRAEFIK_HTTPS_ENDPOINT
+      traefik.http.routers.inspector.tls: true
+      traefik.http.routers.inspector.middlewares: cors
+      traefik.http.middlewares.cors.headers.customResponseHeaders.Access-Control-Allow-Origin: "*"
+      traefik.http.middlewares.cors.headers.accesscontrolallowmethods: "*"
+      traefik.http.middlewares.cors.headers.accesscontrolallowheaders: "*"
+      traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist: "*"
+      traefik.http.middlewares.cors.headers.accesscontrolmaxage: 300
+      traefik.http.middlewares.cors.headers.addvaryheader: true
+      traefik.docker.network: inspector
+
+  celeryworker:
+    build:
+      context: .
+      dockerfile: compose/production/inspector/Dockerfile
+      args:
+        BUILD_ENVIRONMENT: worker
+    image: ms32035/inspector-worker:latest
+    restart: unless-stopped
+    command: ["celery", "-A", "inspector.taskapp", "worker", "-l", INFO]
+    volumes:
+      - profiling_reports:/app/inspector/media/profiling_reports
+    env_file:
+      - .envs/.production/.inspector
+      - .envs/.production/.postgres
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - inspector_backend
+
+  celerybeat:
+    image: ms32035/inspector:latest
+    restart: unless-stopped
+    env_file:
+      - .envs/.production/.inspector
+      - .envs/.production/.postgres
+    depends_on:
+      - postgres
+      - redis
+    command: ["celery", "-A", "inspector.taskapp", "beat", "-l", "INFO"]
+    networks:
+      - inspector_backend
+
+  flower:
+    image: ms32035/inspector:latest
+    restart: unless-stopped
+    expose:
+      - 5555
+    command: ["celery", "-A", "inspector.taskapp", "flower"]
+    env_file:
+      - .envs/.production/.inspector
+      - .envs/.production/.postgres
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - inspector
+      - inspector_backend
+    labels:
+      traefik.enable: true
+      traefik.http.routers.inspectorflower.rule: Host(`$INSPECTOR_FLOWER_HOST`)
+      traefik.http.routers.inspectorflower.entrypoints: $TRAEFIK_HTTPS_ENDPOINT
+      traefik.http.routers.inspectorflower.tls: true
+      traefik.docker.network: inspector
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .envs/.production/.postgres
+    networks:
+      - inspector_backend
+
+  redis:
+    image: redis:6-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+    networks:
+      - inspector_backend
+
+
+volumes:
+  pgdata: {}
+  redisdata: {}
+  profiling_reports: {}
+
+networks:
+  inspector:
+    name: inspector
+  inspector_backend:
+    name: inspector_backend

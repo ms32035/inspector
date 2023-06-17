@@ -1,0 +1,9 @@
+# Profiling
+-r ./base.txt
+
+pandas[performance]>=2.0.2
+#ydata-profiling[notebook]==4.1.2
+ydata-profiling[notebook]@git+https://github.com/ydataai/ydata-profiling#egg=develop
+
+great_expectations>=0.17.0
+pyspark==3.4.0

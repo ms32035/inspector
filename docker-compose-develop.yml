@@ -1,0 +1,91 @@
+version: '3'
+
+services:
+  inspector: &inspector
+    build:
+      context: .
+      dockerfile: compose/develop/inspector/Dockerfile
+    image: ms32035/inspector:develop
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/app:z
+    env_file:
+      - .envs/.develop/.inspector
+      - .envs/.develop/.postgres
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "python manage.py migrate &&
+      python manage.py runserver_plus 0.0.0.0:8000"
+
+  celeryworker:
+    <<: *inspector
+    image: ms32035/inspector-worker:develop
+    build:
+      context: .
+      dockerfile: compose/develop/inspector/Dockerfile
+      args:
+        BUILD_ENVIRONMENT: worker
+    ports: []
+    command: ["celery", "-A", "inspector.taskapp", "worker", "-l", INFO]
+    environment:
+      DJANGO_EXTENSIONS_ENABLED: "False"
+
+  celerybeat:
+    <<: *inspector
+    image: ms32035/inspector:develop
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    command: >
+      bash -c "rm -f './celerybeat.pid' &&
+      celery -A inspector.taskapp beat -l INFO"
+    environment:
+      DJANGO_EXTENSIONS_ENABLED: "False"
+
+  flower:
+    <<: *inspector
+    image: ms32035/inspector:develop
+    ports:
+      - "5555:5555"
+    environment:
+      DJANGO_EXTENSIONS_ENABLED: "False"
+    command: ["celery", "-A", "inspector.taskapp", "flower"]
+
+  docs:
+    <<: *inspector
+    container_name: inspector_develop_docs
+    env_file:
+      - ./.envs/.develop/.inspector
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./inspector:/app/inspector:z
+    ports:
+      - "9000:9000"
+    depends_on: []
+    entrypoint: /usr/bin/make
+    working_dir: /docs
+    command: livehtml
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: inspector_develop_postgres
+    volumes:
+      - inspector_develop_postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .envs/.develop/.postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6-alpine
+    container_name: inspector_local_redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  inspector_develop_postgres_data: {}

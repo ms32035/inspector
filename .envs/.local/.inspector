@@ -1,0 +1,16 @@
+DJANGO_SETTINGS_MODULE=config.settings.local
+
+FIELD_ENCRYPTION_KEY=UdC18SCAo5Ebj9eOBULtjl8EhsOiEA_NcmFTVlY_DvY=
+
+DATABASE_URL=postgres://inspector:inspector@localhost:5432/inspector
+CELERY_BROKER_URL=redis://localhost:6379/0
+DJANGO_SILK_ENABLED=True
+
+# Redis
+REDIS_URL=redis://localhost:6379/0
+
+# Flower
+CELERY_FLOWER_USER=inspector
+CELERY_FLOWER_PASSWORD=inspector
+
+USE_DOCKER=no

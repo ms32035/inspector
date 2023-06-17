@@ -1,0 +1,50 @@
+[tool.isort]
+line_length = 120
+known_first_party = ["inspector","config"]
+multi_line_output = 3
+default_section = "THIRDPARTY"
+skip = "venv/"
+skip_glob = "**/migrations/*.py"
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = ["--ds=config.settings.test", "--reuse-db"]
+python_files = ["tests.py", "test_*.py"]
+
+[tool.pylint.MASTER]
+load-plugins=["pylint_django", "pylint_celery"]
+django-settings-module="config.settings.local"
+
+[tool.pylint.FORMAT]
+max-line-length=120
+
+[tool.pylint.'MESSAGES CONTROL']
+disable=["missing-docstring", "invalid-name"]
+
+[tool.pylint.DESIGN]
+max-parents=13
+
+[tool.pylint.TYPECHECK]
+generated-members=["REQUEST","acl_users","aq_parent","[a-zA-Z]+_set{1,2}","save", "delete"]
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[tool."mypy-*".migrations."*"]
+# Django migrations should not produce any errors:
+ignore_errors = true
+
+[tool.black]
+line-length = 120
