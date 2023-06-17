@@ -48,8 +48,8 @@ class Connector(metaclass=ABCMeta):
         """Return a pandas DataFrame for the given table"""
         pass
 
-    @staticmethod
-    def get_connector_for_instance(instance: Instance) -> "Connector":
+    @classmethod
+    def get_connector_for_instance(cls, instance: Instance) -> typing.Self:
         connector_module = import_module(f"inspector.systems.connectors.{instance.system.application}_connector")
         connector_class = getattr(connector_module, instance.system.application.capitalize() + "Connector")
         return connector_class(

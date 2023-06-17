@@ -7,6 +7,7 @@ In development configuration, standard Swagger UI is available
 at :code:`/` for authenticated users.
 
 Authentication for all APIs can be done through:
+
 * a JWT token
 * API token obtained from the user profile
 

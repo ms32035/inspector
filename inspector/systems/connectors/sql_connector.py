@@ -5,7 +5,6 @@ from sqlalchemy.engine import create_engine, reflection
 
 if typing.TYPE_CHECKING:
     from sqlalchemy.engine import Engine
-    from ..models import Instance
 
 from . import Connector, Dataset
 
@@ -61,10 +60,6 @@ class SQLConnector(Connector):
 
     def table_df(self, table: str, schema: str = None) -> DataFrame:
         return read_sql_table(con=self.engine, table_name=table, schema=schema)
-
-    @classmethod
-    def get_connector_for_instance(cls, instance: "Instance") -> "SQLConnector":
-        return cls.get_connector_for_instance(instance)
 
     @property
     def jdbc_options(self) -> dict[str, str]:

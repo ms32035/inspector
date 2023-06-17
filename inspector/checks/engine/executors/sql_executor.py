@@ -8,7 +8,8 @@ from . import CheckExecutor, Result
 
 if typing.TYPE_CHECKING:
     from ....checks.models import Datacheck
-    from ....systems.connectors.sql_connector import SQLConnector
+
+from ....systems.connectors.sql_connector import SQLConnector
 
 
 class SQLExecutor(CheckExecutor):
