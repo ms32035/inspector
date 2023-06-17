@@ -46,6 +46,9 @@ class CheckProcessor:
             self.checkrun.start_time = dt.now(utc)
 
         except Exception as exc:
+            import traceback
+
+            traceback.print_exc()
             self.checkrun.status = Statuses.ERROR
             self.checkrun.error_message = repr(exc)
 
