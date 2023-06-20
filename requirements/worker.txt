@@ -2,8 +2,7 @@
 -r ./base.txt
 
 pandas[performance]>=2.0.2
-#ydata-profiling[notebook]==4.1.2
-ydata-profiling[notebook]@git+https://github.com/ydataai/ydata-profiling#egg=develop
+ydata-profiling[notebook]==4.3.0
 
 great_expectations>=0.17.0
 azure-storage-blob
