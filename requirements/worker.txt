@@ -11,4 +11,4 @@ azure-keyvault-secrets
 google-cloud-storage
 google-cloud-secret-manager
 
-pyspark==3.4.0
+pyspark==3.4.1
