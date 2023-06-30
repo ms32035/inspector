@@ -1,10 +1,10 @@
 # Profiling
 -r ./base.txt
 
-pandas[performance]>=2.0.2
+pandas[performance]>=2.0.3
 ydata-profiling[notebook]==4.3.1
 
-great_expectations>=0.17.0
+great_expectations>=0.17.2
 azure-storage-blob
 azure-identity
 azure-keyvault-secrets

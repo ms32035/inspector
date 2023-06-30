@@ -17,7 +17,7 @@ djangorestframework==3.14.0  # https://github.com/encode/django-rest-framework
 djangorestframework-simplejwt==5.2.2
 
 django-encrypted-model-fields==0.6.5  # https://gitlab.com/lansharkconsulting/django/django-encrypted-model-fields/
-drf-spectacular>=0.26.2  # https://github.com/tfranzel/drf-spectacular
+drf-spectacular>=0.26.3  # https://github.com/tfranzel/drf-spectacular
 django-filter==23.2  # https://github.com/carltongibson/django-filter
 django-health-check==3.17.0  # https://github.com/KristianOellegaard/django-health-check
 dj-rest-auth[with_social]==4.0.1  # https://github.com/iMerica/dj-rest-auth
