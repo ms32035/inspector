@@ -5,10 +5,5 @@ pandas[performance]>=2.0.3
 ydata-profiling[notebook]==4.3.1
 
 great_expectations>=0.17.2
-azure-storage-blob
-azure-identity
-azure-keyvault-secrets
-google-cloud-storage
-google-cloud-secret-manager
 
 pyspark==3.4.1
