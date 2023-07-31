@@ -18,7 +18,7 @@ sphinx_rtd_theme==1.2.2
 
 # Code quality
 # ------------------------------------------------------------------------------
-flake8==6.0.0  # https://github.com/PyCQA/flake8
+flake8==6.1.0  # https://github.com/PyCQA/flake8
 flake8-isort==6.0.0  # https://github.com/gforcada/flake8-isort
 coverage==7.2.7  # https://github.com/nedbat/coveragepy
 black==23.7.0  # https://github.com/psf/black
