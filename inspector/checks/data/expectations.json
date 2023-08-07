@@ -1,1 +1,8 @@
-[{"name": "expect_column_values_to_be_unique", "table_level": "0", "description": ""}]
+[
+  {
+    "description": "",
+    "name": "expect_column_values_to_be_unique",
+    "parameters": {},
+    "table_level": "0"
+  }
+]

@@ -61,6 +61,7 @@ class CheckRunService:
             left_expectation_id=check.left_expectation_id,
             relation=check.relation,
             warning_relation=check.warning_relation,
+            left_column=check.left_column,
         )
         with transaction.atomic():
             check_run.save()

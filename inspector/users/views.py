@@ -42,6 +42,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()
     search_fields = ("first_name", "last_name")
+    filterset_fields = ("first_name", "last_name")
 
 
 class GoogleConnect(SocialConnectView):
