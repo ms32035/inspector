@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: compose/production/inspector/Dockerfile
-    image: ms32035/inspector:latest
+    image: ghcr.io/ms32035/inspector
     restart: unless-stopped
     expose:
       - 5000
@@ -42,7 +42,7 @@ services:
       dockerfile: compose/production/inspector/Dockerfile
       args:
         BUILD_ENVIRONMENT: worker
-    image: ms32035/inspector-worker:latest
+    image: ghcr.io/ms32035/inspector-worker
     restart: unless-stopped
     command: ["celery", "-A", "inspector.taskapp", "worker", "-l", INFO]
     volumes:
@@ -57,7 +57,7 @@ services:
       - inspector_backend
 
   celerybeat:
-    image: ms32035/inspector:latest
+    image: ghcr.io/ms32035/inspector
     restart: unless-stopped
     env_file:
       - .envs/.production/.inspector
@@ -70,7 +70,7 @@ services:
       - inspector_backend
 
   flower:
-    image: ms32035/inspector:latest
+    image: ghcr.io/ms32035/inspector
     restart: unless-stopped
     expose:
       - 5555
