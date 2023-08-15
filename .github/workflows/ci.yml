@@ -1,17 +1,16 @@
 name: CI
 
-# Enable Buildkit and let compose use it to speed up image building
 env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
 
 on:
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "main", "develop" ]
     paths-ignore: [ "docs/**" ]
 
   push:
-    branches: [ "master", "main" ]
+    branches: [ "main", "develop" ]
     paths-ignore: [ "docs/**" ]
 
 concurrency:
@@ -38,7 +37,7 @@ jobs:
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.0
 
-  # With no caching at all the entire ci process takes 4m 30s to complete!
+
   pytest:
     runs-on: ubuntu-latest
 
