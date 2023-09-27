@@ -6,4 +6,4 @@ ydata-profiling[notebook]==4.5.1
 
 great_expectations>=0.17.8
 
-pyspark==3.4.1
+pyspark==3.5.0
