@@ -10,5 +10,5 @@ gunicorn==21.2.0  # https://github.com/benoitc/gunicorn
 # django-storages[boto3]==1.7.1  # https://github.com/jschneier/django-storages
 # django-anymail[mailgun]==5.0  # https://github.com/anymail/django-anymail
 
-whitenoise==6.5.0  # https://github.com/evansd/whitenoise
+whitenoise==6.6.0  # https://github.com/evansd/whitenoise
 # django-cachalot==2.5.3
