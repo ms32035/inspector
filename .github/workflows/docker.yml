@@ -35,7 +35,7 @@ jobs:
 
       - name: Inspector image
         id: release_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           outputs: "type=registry,push=true"
           provenance: false
@@ -48,7 +48,7 @@ jobs:
 
       - name: Inspector worker image
         id: release_build_worker
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           outputs: "type=registry,push=true"
           provenance: false
