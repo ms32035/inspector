@@ -3,9 +3,10 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialConnectView
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, viewsets
+from rest_framework.authtoken.models import Token
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
-from .serializers import RegisterUserSerializer, UserSerializer
+from .serializers import RegisterUserSerializer, TokenSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -49,3 +50,13 @@ class GoogleConnect(SocialConnectView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
     callback_url = "postmessage"
+
+
+class ObtainTokenView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TokenSerializer
+
+    def get_object(self):
+        Token.objects.filter(user=self.request.user).delete()
+        token, created = Token.objects.get_or_create(user=self.request.user)
+        return token

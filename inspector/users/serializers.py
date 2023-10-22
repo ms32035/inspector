@@ -1,5 +1,6 @@
 from django.core.validators import EmailValidator
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -31,3 +32,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "first_name", "last_name", "email"]
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(source="key")
+
+    class Meta:
+        model = Token
+        fields = ["token"]

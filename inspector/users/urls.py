@@ -3,7 +3,7 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework_simplejwt import views as jwt_views
 
-from .views import GoogleConnect, RegisterUserView, UserProfileView, UserViewSet
+from .views import GoogleConnect, ObtainTokenView, RegisterUserView, UserProfileView, UserViewSet
 
 router = routers.DefaultRouter()
 user = router.register(r"user", UserViewSet)
@@ -16,5 +16,6 @@ urlpatterns = [
     path("user/me/", UserProfileView.as_view(), name="user-me"),
     path("connect/google/", GoogleConnect.as_view(), name="google_connect"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path("authtoken/", ObtainTokenView.as_view(), name="token_obtain"),
     path("", include(router.urls)),
 ]

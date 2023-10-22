@@ -63,8 +63,12 @@ class DatacheckViewSet(viewsets.ModelViewSet):
                 serializer["environment"].value,
                 request.user,
             )
-        except (models.Datacheck.DoesNotExist, models.Environment.DoesNotExist, InstanceNotFound) as exc:
-            return Response({"message": str(exc)}, status=400)
+        except models.Datacheck.DoesNotExist:
+            return Response({"message": "Datacheck not found"}, status=400)
+        except models.Environment.DoesNotExist:
+            return Response({"message": "Environment not found"}, status=400)
+        except InstanceNotFound:
+            return Response({"message": "Instance not found"}, status=400)
 
         return Response(serializers.CheckRunSerializer(checkrun).data)
 
@@ -78,8 +82,12 @@ class DatacheckViewSet(viewsets.ModelViewSet):
                 serializer["environment"].value,
                 request.user,
             )
-        except (models.Datacheck.DoesNotExist, models.Environment.DoesNotExist, InstanceNotFound) as exc:
-            return Response({"message": str(exc)}, status=400)
+        except models.Datacheck.DoesNotExist:
+            return Response({"message": "Datacheck not found"}, status=400)
+        except models.Environment.DoesNotExist:
+            return Response({"message": "Environment not found"}, status=400)
+        except InstanceNotFound:
+            return Response({"message": "Instance not found"}, status=400)
 
         return Response(serializers.CheckRunSerializer(checkrun).data)
 
@@ -160,8 +168,8 @@ class TagViewSet(viewsets.ModelViewSet):
                 serializer["environment"].value,
                 request.user,
             )
-        except models.Environment.DoesNotExist as exc:
-            return Response(str(exc), status=400)
+        except models.Environment.DoesNotExist:
+            return Response({"message": "Environment not found"}, status=400)
         if not runs:
             return Response({"message": "No checks found for tag"}, status=400)
 
