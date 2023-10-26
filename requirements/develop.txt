@@ -36,4 +36,4 @@ django-extensions==3.2.3  # https://github.com/django-extensions/django-extensio
 django-coverage-plugin==3.1.0  # https://github.com/nedbat/django_coverage_plugin
 pytest-django==4.5.2  # https://github.com/pytest-dev/pytest-django
 django-silk==5.0.4
-werkzeug==3.0.0  # https://github.com/pallets/werkzeug
+werkzeug==3.0.1  # https://github.com/pallets/werkzeug
