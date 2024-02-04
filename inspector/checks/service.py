@@ -52,9 +52,11 @@ class CheckRunService:
             environment_id=environment_id,
             user=user,
             left_instance=left_instance,
-            left_table=DbTableQuery.dataset_environment(check.left_dataset_id, environment_id)
-            if check.left_dataset_id
-            else None,
+            left_table=(
+                DbTableQuery.dataset_environment(check.left_dataset_id, environment_id)
+                if check.left_dataset_id
+                else None
+            ),
             left_dataset_id=check.left_dataset_id,
             right_instance=right_instance,
             warning_instance=warning_instance,

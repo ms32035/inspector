@@ -33,18 +33,6 @@ services:
     environment:
       DJANGO_EXTENSIONS_ENABLED: "False"
 
-  celerybeat:
-    <<: *inspector
-    image: ms32035/inspector:develop
-    depends_on:
-      - redis
-      - postgres
-    ports: []
-    command: >
-      bash -c "rm -f './celerybeat.pid' &&
-      celery -A inspector.taskapp beat -l INFO"
-    environment:
-      DJANGO_EXTENSIONS_ENABLED: "False"
 
   flower:
     <<: *inspector

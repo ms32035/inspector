@@ -71,7 +71,11 @@ SECURE_REDIRECT_EXEMPT = ["^ht"]
 # ------------------------
 
 # STATICFILES_STORAGE = 'config.settings.production.StaticRootS3Boto3Storage'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES["default"]["BACKEND"] = (
+    env.str("DJANGO_STORAGE_BACKEND", "whitenoise.storage.CompressedManifestStaticFilesStorage"),
+)
+
+
 # STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
 
 # MEDIA
@@ -92,7 +96,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # endregion
-# DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3Boto3Storage'
 # MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
 
 # TEMPLATES

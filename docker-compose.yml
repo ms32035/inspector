@@ -56,19 +56,6 @@ services:
     networks:
       - inspector_backend
 
-  celerybeat:
-    image: ghcr.io/ms32035/inspector
-    restart: unless-stopped
-    env_file:
-      - .envs/.production/.inspector
-      - .envs/.production/.postgres
-    depends_on:
-      - postgres
-      - redis
-    command: ["celery", "-A", "inspector.taskapp", "beat", "-l", "INFO"]
-    networks:
-      - inspector_backend
-
   flower:
     image: ghcr.io/ms32035/inspector
     restart: unless-stopped

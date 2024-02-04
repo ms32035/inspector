@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+
 from pathlib import Path
 
 import environ
@@ -64,7 +65,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "encrypted_model_fields",
-    "django_celery_beat",
     "django_filters",
     "health_check",
     "health_check.db",
@@ -121,6 +121,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -224,8 +225,6 @@ CELERY_TASK_TIME_LIMIT = 5 * 60
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-soft-time-limit
 # TODO: set to whatever value is adequate in your circumstances
 CELERY_TASK_SOFT_TIME_LIMIT = 60
-# https://docs.celeryq.dev/en/stable/userguide/configuration.html#beat-scheduler
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#worker-send-task-events
 CELERY_WORKER_SEND_TASK_EVENTS = True
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#std-setting-task_send_sent_event
@@ -255,7 +254,15 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # Profiling storage
 
-DEFAULT_FILE_STORAGE = env.str("DJANGO_DEFAULT_FILE_STORAGE", "django.core.files.storage.FileSystemStorage")
+STORAGES = {
+    "default": {
+        "BACKEND": env.str("DJANGO_STORAGE_BACKEND", "django.core.files.storage.FileSystemStorage"),
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 PROFILING_REPORTS_PATH = env.str("DJANGO_PROFILING_REPORTS_PATH", "profiling_reports")
 AWS_STORAGE_BUCKET_NAME = env.str("DJANGO_AWS_STORAGE_BUCKET_NAME", None)
 AWS_DEFAULT_ACL = None
