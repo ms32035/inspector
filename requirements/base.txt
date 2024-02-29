@@ -1,7 +1,7 @@
 pytz==2024.1  # https://github.com/stub42/pytz
 python-slugify==8.0.4  # https://github.com/un33k/python-slugify
 argon2-cffi==23.1.0  # https://github.com/hynek/argon2_cffi
-redis==5.0.1  # pyup: < 4.0 # https://github.com/antirez/redis
+redis==5.0.2  # pyup: < 4.0 # https://github.com/antirez/redis
 celery==5.3.6  # pyup: < 5.0  # https://github.com/celery/celery
 flower==2.0.1  # https://github.com/mher/flower
 
