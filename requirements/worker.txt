@@ -1,9 +1,9 @@
 # Profiling
 -r ./base.txt
 
-pandas[performance]>=2.2.0
-ydata-profiling[notebook]==4.6.4
+pandas[performance]>=2.2.1
+ydata-profiling[notebook]==4.6.5
 
-great_expectations>=0.18.8
+great_expectations>=0.18.10
 
 pyspark==3.5.1
