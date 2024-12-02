@@ -20,7 +20,7 @@ drf-spectacular>=0.27.1  # https://github.com/tfranzel/drf-spectacular
 django-filter==24.3  # https://github.com/carltongibson/django-filter
 django-health-check==3.18.3  # https://github.com/KristianOellegaard/django-health-check
 dj-rest-auth[with_social]==7.0.0  # https://github.com/iMerica/dj-rest-auth
-django-import-export==4.2.1
+django-import-export==4.3.2
 django-taggit==6.1.0
 django-storages==1.14.4
 django-cors-headers==4.6.0 # https://github.com/adamchainz/django-cors-headers
