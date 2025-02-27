@@ -13,7 +13,7 @@ django-redis==5.4.0  # https://github.com/niwinz/django-redis
 
 # Django REST Framework
 djangorestframework==3.15.2  # https://github.com/encode/django-rest-framework
-djangorestframework-simplejwt==5.4.0
+djangorestframework-simplejwt==5.5.0
 
 django-encrypted-model-fields==0.6.5  # https://gitlab.com/lansharkconsulting/django/django-encrypted-model-fields/
 drf-spectacular>=0.27.1  # https://github.com/tfranzel/drf-spectacular
