@@ -2,7 +2,7 @@
 -r ./base.txt
 
 pandas[performance]>=2.2.1
-ydata-profiling[notebook]==4.16.0
+ydata-profiling[notebook]==4.16.1
 
 great_expectations>=0.18.10
 
