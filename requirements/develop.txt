@@ -12,7 +12,7 @@ djangorestframework-stubs==3.16.5  # https://github.com/typeddjango/djangorestfr
 # Documentation
 # ------------------------------------------------------------------------------
 
-sphinx==8.2.3
+sphinx==9.0.0
 sphinx-autobuild==2024.10.3  # https://github.com/executablebooks/sphinx-autobuild
 sphinx_rtd_theme==3.0.2
 
