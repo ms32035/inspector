@@ -2,7 +2,7 @@
 
 -r ./base.txt
 
-gunicorn==24.1.1  # https://github.com/benoitc/gunicorn
+gunicorn==25.0.0  # https://github.com/benoitc/gunicorn
 #Collectfast==2.2.0  # https://github.com/antonagestam/collectfast
 
 # Django
