@@ -4,6 +4,6 @@
 pandas[performance]>=2.2.1
 ydata-profiling[notebook]==4.17.0
 
-great_expectations>=0.18.10
+great_expectations>=0.18.22
 
 pyspark==4.1.1
