@@ -1,1 +1,1 @@
-sqlalchemy-redshift==0.8.14
+sqlalchemy-redshift==1.0.0
