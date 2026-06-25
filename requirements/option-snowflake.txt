@@ -1,2 +1,2 @@
 snowflake-connector-python==4.6.0
-snowflake-sqlalchemy==1.10.1
+snowflake-sqlalchemy==1.10.2
