@@ -1,7 +1,7 @@
 # Profiling
 -r ./base.txt
 
-pandas[performance]>=3.0.3
+pandas[performance]>=3.0.4
 ydata-profiling[notebook]==4.17.0
 
 great_expectations>=0.18.22
