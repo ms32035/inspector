@@ -27,4 +27,4 @@ django-cors-headers==4.9.0 # https://github.com/adamchainz/django-cors-headers
 django-safedelete==1.4.1
 
 psycopg[binary]==3.3.4
-sqlalchemy==2.0.51
+sqlalchemy==2.0.52
